@@ -1,0 +1,42 @@
+{
+  "captured_at": "",
+  "jira_origin": "",
+  "dialog": {
+    "selector": "",
+    "role": "",
+    "aria_modal": "",
+    "aria_label": "",
+    "aria_labelledby": "",
+    "data_testid": "",
+    "verified_unique_when_create_dialog_open": false
+  },
+  "project_guard": {
+    "expected_exact_text": "PERMAQA",
+    "selector": "",
+    "observed_text": "",
+    "position_confirmed_in_dialog_header_area": false,
+    "verified": false
+  },
+  "issue_type_guard": {
+    "expected_exact_text": "Bug",
+    "selector": "",
+    "observed_text": "",
+    "position_confirmed_in_dialog_header_area": false,
+    "verified": false
+  },
+  "create_action_evidence_only": {
+    "expected_exact_text": "Erstellen or Create",
+    "selector": "",
+    "tag": "",
+    "type": "",
+    "aria_label": "",
+    "verified_present": false,
+    "must_never_be_clicked_by_extension": true
+  },
+  "negative_checks": {
+    "permaqa_story_rejected": false,
+    "different_project_bug_rejected": false,
+    "multiple_matching_dialogs_fail_closed": false
+  },
+  "notes": "Populate only from tools/dialog-guard-probe.js and real Jira inspection. Do not infer selectors from screenshots."
+}

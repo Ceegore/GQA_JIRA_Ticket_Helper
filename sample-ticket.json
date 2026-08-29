@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "summary": "Inventory causes game freeze",
+  "description": "Steps to reproduce:\n1. Launch the game\n2. Load a save\n3. Open the inventory\n\nExpected:\nInventory opens normally.\n\nActual:\nThe game freezes.",
+  "tester": "",
+  "build_version_spotted": "",
+  "build_version_released": "",
+  "branch": "",
+  "labels": [],
+  "priority": "High",
+  "severity": "",
+  "game_mode": "Single player",
+  "affected_player": "",
+  "repro_rate": "",
+  "due_date": "",
+  "working_hours": 1.5,
+  "origin": "",
+  "flagged_impediment": false
+}

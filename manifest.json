@@ -1,0 +1,39 @@
+{
+  "manifest_version": 3,
+  "name": "GQA JIRA bug reporter helper",
+  "version": "1.1.0",
+  "description": "Internal helper that pastes structured bug ticket JSON from the clipboard into the open PERMAQA Bug creation dialog. It never submits tickets.",
+  "permissions": [
+    "clipboardRead"
+  ],
+  "host_permissions": [
+    "https://YOUR-COMPANY.atlassian.net/*"
+  ],
+  "action": {
+    "default_title": "GQA JIRA bug reporter helper",
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://YOUR-COMPANY.atlassian.net/*"
+      ],
+      "js": [
+        "config.js",
+        "shared.js",
+        "content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "gqa-jira-bug-reporter-helper@internal.local",
+      "data_collection_permissions": {
+        "required": [
+          "none"
+        ]
+      }
+    }
+  }
+}

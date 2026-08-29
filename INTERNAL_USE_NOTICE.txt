@@ -1,0 +1,6 @@
+GQA JIRA bug reporter helper
+
+Intended for internal GQA tester use only.
+This package is a browser form-filling helper, not a Jira API integration.
+Ticket review and submission remain manual user actions.
+Generated DOM reports/screenshots may contain internal company/Jira metadata and should be handled accordingly.

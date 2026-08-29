@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "summary": "Inventory causes game freeze",
+  "description": "Overview:\nOpening the inventory freezes the game.\n\nSteps to Reproduce:\n1. Launch the game\n2. Load a save\n3. Open the inventory\n\nExpected Result:\nInventory opens normally.\n\nActual Result:\nThe game freezes.",
+  "tester": "<REPLACE WITH EXACT EXISTING TESTER DISPLAY VALUE>",
+  "build_version_spotted": "<REPLACE WITH EXACT REAL VALUE>",
+  "build_version_released": "",
+  "branch": "<REPLACE WITH EXACT REAL VALUE>",
+  "labels": ["<REPLACE WITH EXISTING LABEL>"],
+  "priority": "<REPLACE WITH EXACT REAL PRIORITY>",
+  "severity": "<REPLACE WITH EXACT REAL SEVERITY>",
+  "game_mode": "<REPLACE WITH EXACT REAL GAME MODE>",
+  "affected_player": "<REPLACE WITH EXACT REAL VALUE OR EMPTY>",
+  "repro_rate": "<REPLACE WITH EXACT REAL VALUE>",
+  "due_date": "2026-09-15",
+  "working_hours": 1.5,
+  "origin": "<REPLACE WITH EXACT REAL ORIGIN>",
+  "flagged_impediment": false
+}

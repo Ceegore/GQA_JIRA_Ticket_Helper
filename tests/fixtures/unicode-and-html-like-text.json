@@ -1,0 +1,5 @@
+{
+  "schema_version": 1,
+  "summary": "Unicode test äöü ß 日本語",
+  "description": "Line 1\nLine 2\n\n<script>alert('x')</script>\n<img src=x onerror=alert(1)>"
+}

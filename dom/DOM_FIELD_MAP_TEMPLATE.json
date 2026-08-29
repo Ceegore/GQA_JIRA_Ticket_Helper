@@ -1,0 +1,25 @@
+{
+  "captured_at": "",
+  "jira_host": "",
+  "project": "PERMAQA",
+  "issue_type": "Bug",
+  "notes": "Fill only from real DOM evidence. Do not guess from screenshots.",
+  "fields": {
+    "summary": {"visible_label":"Zusammenfassung","tag":"","role":"","id":"","aria_label":"","aria_labelledby":"","data_testid":"","selector":"","actual_adapter":"text","verified":false,"notes":""},
+    "description": {"visible_label":"Beschreibung","tag":"","role":"","id":"","aria_label":"","aria_labelledby":"","data_testid":"","selector":"","actual_adapter":"text","verified":false,"notes":""},
+    "tester": {"visible_label":"Tester","tag":"","role":"","id":"","aria_label":"","aria_labelledby":"","data_testid":"","selector":"","actual_adapter":"single-select","verified":false,"notes":""},
+    "build_version_spotted": {"visible_label":"Build Version Spotted","tag":"","role":"","id":"","aria_label":"","aria_labelledby":"","data_testid":"","selector":"","actual_adapter":"auto","verified":false,"notes":""},
+    "build_version_released": {"visible_label":"Build Version Released","tag":"","role":"","id":"","aria_label":"","aria_labelledby":"","data_testid":"","selector":"","actual_adapter":"auto","verified":false,"notes":""},
+    "branch": {"visible_label":"Branch","tag":"","role":"","id":"","aria_label":"","aria_labelledby":"","data_testid":"","selector":"","actual_adapter":"auto","verified":false,"notes":""},
+    "labels": {"visible_label":"Stichwort","tag":"","role":"","id":"","aria_label":"","aria_labelledby":"","data_testid":"","selector":"","actual_adapter":"multi-select","verified":false,"notes":""},
+    "priority": {"visible_label":"Priorität","tag":"","role":"","id":"","aria_label":"","aria_labelledby":"","data_testid":"","selector":"","actual_adapter":"single-select","verified":false,"notes":""},
+    "severity": {"visible_label":"Severity","tag":"","role":"","id":"","aria_label":"","aria_labelledby":"","data_testid":"","selector":"","actual_adapter":"single-select","verified":false,"notes":""},
+    "game_mode": {"visible_label":"Game Mode","tag":"","role":"","id":"","aria_label":"","aria_labelledby":"","data_testid":"","selector":"","actual_adapter":"single-select","verified":false,"notes":""},
+    "affected_player": {"visible_label":"Affected Player","tag":"","role":"","id":"","aria_label":"","aria_labelledby":"","data_testid":"","selector":"","actual_adapter":"single-select","verified":false,"notes":""},
+    "repro_rate": {"visible_label":"Repro Rate","tag":"","role":"","id":"","aria_label":"","aria_labelledby":"","data_testid":"","selector":"","actual_adapter":"single-select","verified":false,"notes":""},
+    "due_date": {"visible_label":"Fälligkeitsdatum","tag":"","role":"","id":"","aria_label":"","aria_labelledby":"","data_testid":"","selector":"","actual_adapter":"date","verified":false,"notes":""},
+    "working_hours": {"visible_label":"Working Hours","tag":"","role":"","id":"","aria_label":"","aria_labelledby":"","data_testid":"","selector":"","actual_adapter":"number","verified":false,"notes":""},
+    "origin": {"visible_label":"Origin","tag":"","role":"","id":"","aria_label":"","aria_labelledby":"","data_testid":"","selector":"","actual_adapter":"single-select","verified":false,"notes":""},
+    "flagged_impediment": {"visible_label":"Impediment","tag":"","role":"","id":"","aria_label":"","aria_labelledby":"","data_testid":"","selector":"","actual_adapter":"checkbox-true-only","verified":false,"notes":""}
+  }
+}

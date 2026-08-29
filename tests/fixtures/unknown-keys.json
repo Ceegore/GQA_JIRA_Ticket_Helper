@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "summary": "Known field remains actionable",
+  "unknown_future_key": "must be ignored",
+  "project": "must never trigger project switching",
+  "issue_type": "must never trigger issue-type switching",
+  "attachments": ["must never be processed"]
+}

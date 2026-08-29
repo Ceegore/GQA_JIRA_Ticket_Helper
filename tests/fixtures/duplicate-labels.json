@@ -1,0 +1,5 @@
+{
+  "schema_version": 1,
+  "summary": "Duplicate label normalization test",
+  "labels": ["crash", " CRASH ", "inventory", "inventory", "", null, 7]
+}

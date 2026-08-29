@@ -1,0 +1,18 @@
+{
+  "captured_at": "",
+  "jira_host": "",
+  "project": "PERMAQA",
+  "issue_type": "Bug",
+  "notes": "Populate only from approved/observed Jira values. This catalog is for AI prompting/test data; the extension itself still exact-matches the live UI.",
+  "priority": [],
+  "severity": [],
+  "game_mode": [],
+  "affected_player": [],
+  "repro_rate": [],
+  "origin": [],
+  "build_version_spotted": [],
+  "build_version_released": [],
+  "branch": [],
+  "labels": [],
+  "tester_display_names": []
+}

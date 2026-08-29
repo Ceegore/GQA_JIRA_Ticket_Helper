@@ -1,0 +1,7 @@
+manifest.json
+config.js
+shared.js
+content.js
+popup.html
+popup.css
+popup.js

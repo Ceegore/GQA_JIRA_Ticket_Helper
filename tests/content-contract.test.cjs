@@ -1,0 +1,46 @@
+"use strict";
+
+const test = require("node:test");
+const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const path = require("node:path");
+
+const content = fs.readFileSync(path.resolve(__dirname, "..", "content.js"), "utf8");
+
+test("dialog guard accepts exactly one matching dialog and uses compact upper tokens", () => {
+  assert.match(content, /return matches\.length === 1 \? matches\[0\] : null/);
+  assert.match(content, /DIALOG_GUARD_TOP_PX/);
+  assert.match(content, /compactElementExactMatch/);
+  assert.match(content, /hasCreateButton\(dialog\)/);
+});
+
+test("dropdown lookup binds to linked or newly opened popup roots", () => {
+  assert.match(content, /aria-controls/);
+  assert.match(content, /aria-owns/);
+  assert.match(content, /newGroups\.length === 1/);
+  assert.match(content, /Multiple groups are always ambiguous/);
+  assert.doesNotMatch(content, /return options\.find\(/);
+});
+
+test("dropdown matching rejects duplicate exact options", () => {
+  assert.match(content, /if \(matches\.length > 1\)/);
+  assert.match(content, /matches\.length !== 1/);
+});
+
+test("multi-select reacquires its control for every clean value", () => {
+  assert.match(content, /for \(const value of cleanValues\) \{\s*const control = getControl\(\)/s);
+  assert.match(content, /getFreshControl/);
+});
+
+test("dialog is revalidated before every field and loss stops safely", () => {
+  assert.match(content, /for \(let index = 0; index < plan\.length; index \+= 1\)/);
+  assert.match(content, /const dialog = findIssueDialog\(\)/);
+  assert.match(content, /stopped = "dialog-lost"/);
+});
+
+test("text inputs preserve the supplied string and role=textbox alone is not editable proof", () => {
+  assert.match(content, /return setNativeInputValue\(control, value\)/);
+  assert.doesNotMatch(content, /setNativeInputValue\(control, value\.trim\(\)\)/);
+  assert.match(content, /function isEditableElement/);
+  assert.doesNotMatch(content, /getAttribute\("role"\) === "textbox"\) \{\s*return replaceContentEditableText/s);
+});
