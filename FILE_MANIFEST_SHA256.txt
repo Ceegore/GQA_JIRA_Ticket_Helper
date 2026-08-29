@@ -51,7 +51,7 @@ ed5cbf2ed6acae9a66ad7dfa718ee1b431a6a8823b9c3c731cb4644c136b8a87  ./sample-ticke
 c16cca7f3d0ca8bb173f849f721dc000fa3d2a6300d696ba6a2e5be3b9044c88  ./SECURITY_MODEL.md
 050bc1d221c751d676b370190039ddaf64c0bb2697b384d99fffc55b844ac818  ./shared.js
 6761155c88929b368f9f74bb16d970e666d66ae69fbc4220f0ed290e20626376  ./tests/content-contract.test.cjs
-57a9ba286bc270c1f98f88ea16bd8132b67c2801dd0661fbabb298aefd36cd34  ./tests/dom-behavior.test.cjs
+348af391ed5c42d64e56ed2125c92933aeb823b6e900db0cc52b1a73baf3a422  ./tests/dom-behavior.test.cjs
 6157de5f7a66fa473e86d04fdbb90111437658b96c358c8ebc9701b921efb92d  ./tests/FIXTURE_EXPECTATIONS.md
 65fb00fa2e6b289f54c008e849642dd23d8e6114258fbd8ba7064b8acaabd280  ./tests/fixtures/duplicate-labels.json
 4ac588b9b802016fd889abe13e578675cc3c1be951b97fa5186cdb0661e890fa  ./tests/fixtures/empty-values.json

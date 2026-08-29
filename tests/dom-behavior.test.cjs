@@ -261,6 +261,29 @@ test("never touches controls outside the guarded dialog", async () => {
   assert.equal(result.filled, 1);
 });
 
+test("only the fully valid dialog is used when a second dialog fails the guard", async () => {
+  // Regression-style paranoia check: findIssueDialog() filters candidates by
+  // dialogMatchesContract() *before* checking uniqueness, so one incomplete
+  // PERMAQA/Bug dialog (missing a Create button) must not make the genuinely
+  // valid dialog ambiguous.
+  const validDialog = dialog(inputRow("Zusammenfassung", { id: "valid-summary" }));
+  const incompleteDialog = `
+    <div role="dialog" data-rect='{"top":700,"height":300,"width":700}'>
+      <div class="hdr" data-rect='{"top":704,"height":24,"width":300}'>
+        <span data-rect='{"top":704,"height":20,"width":120}'>PERMAQA</span>
+        <span data-rect='{"top":704,"height":20,"width":120}'>Bug</span>
+      </div>
+      ${inputRow("Zusammenfassung", { id: "incomplete-summary" })}
+    </div>`;
+
+  const h = createHarness(validDialog + incompleteDialog);
+  const result = await h.paste({ schema_version: 1, summary: "must land only in the valid dialog" });
+
+  assert.equal(result.filled, 1);
+  assert.equal(h.query("#valid-summary").value, "must land only in the valid dialog");
+  assert.equal(h.query("#incomplete-summary").value, "");
+});
+
 // ---------------------------------------------------------------------------
 // Never submit
 // ---------------------------------------------------------------------------
@@ -480,6 +503,18 @@ test("label values are de-duplicated case- and whitespace-insensitively", async 
   const result = await h.paste({ schema_version: 1, labels: ["alpha", "  ALPHA  ", "alpha"] });
 
   assert.deepEqual(chipTexts(h, "labels"), ["alpha"]);
+  assert.equal(result.filled, 1);
+  assert.equal(result.partial, 0);
+});
+
+test("non-string array entries are dropped instead of crashing or being stringified", async () => {
+  const h = createHarness(dialog(combobox("Stichwort", "labels", ["alpha", "beta"])));
+  wireCombobox(h.window, "labels", { multi: true, closeOnSelect: false });
+
+  const junk = [42, null, { evil: true }, ["nested"], "alpha", true, "beta", undefined];
+  const result = await h.paste({ schema_version: 1, labels: junk });
+
+  assert.deepEqual(chipTexts(h, "labels"), ["alpha", "beta"]);
   assert.equal(result.filled, 1);
   assert.equal(result.partial, 0);
 });
