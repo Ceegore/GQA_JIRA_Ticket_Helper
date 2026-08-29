@@ -1,6 +1,6 @@
 # Complete package index
 
-This optimized package contains **85 files**. The list below is generated from the completed recursive audit; every final file is accounted for exactly once. No file under `tools/`, `tests/`, `reference/`, `dom/`, `review/`, `docs/` or `prompts/` may be referenced by the runtime manifest.
+This optimized package contains **90 files**. The list below is generated from the completed recursive audit; every final file is accounted for exactly once. No file under `tools/`, `tests/`, `reference/`, `dom/`, `review/`, `docs/` or `prompts/` may be referenced by the runtime manifest.
 
 ## Root runtime/product files
 
@@ -8,6 +8,7 @@ This optimized package contains **85 files**. The list below is generated from t
 - `content.js` — Hardened fail-closed runtime revalidates dialog/controls, binds options to the intended popup and blocks submit-capable clicks.
 - `manifest.json` — Firefox MV3 manifest has exact host placeholder, clipboardRead only, ordered top-frame content scripts, Gecko ID, strict_min_version and no-data declaration.
 - `package.json` — Project metadata, test/build/preflight npm scripts and pinned dev tooling.
+- `package-lock.json` — Pins the exact dev-tool versions, including the Mozilla add-on linter used by the release gate.
 - `popup.css` — Minimal local styling has no remote resources or functional side effects.
 - `popup.html` — Single-button popup loads packaged scripts only and exposes no unsafe inline runtime code.
 - `popup.js` — User click reads/parses clipboard, queries active tab, sends one message and reports sanitized safe failures.
@@ -36,7 +37,7 @@ This optimized package contains **85 files**. The list below is generated from t
 - `FULL_PROJECT_REVIEW_PROMPT.md` — Exhaustive acceptance prompt preserves scope and requires inventory, execution, security, helper mining and final sweep.
 - `IMPLEMENTATION_PROMPT_FOR_WEAK_AI.md` — Literal phased instructions constrain edits, require tests/evidence and prevent scope creep or broad rewrites.
 - `INTERNAL_USE_NOTICE.txt` — Concise intended-use notice is consistent with the internal, tester-reviewed workflow.
-- `MANUAL_ACCEPTANCE_TESTS.md` — M01-M63 give concrete setup/input, expected result and failure interpretation for real-browser behavior.
+- `MANUAL_ACCEPTANCE_TESTS.md` — M01-M67 give concrete setup/input, expected result and failure interpretation for real-browser behavior.
 - `PACKAGE_INDEX.md` — Final index accounts for all runtime, documentation, evidence, test, tool and review files.
 - `PROJECT_PLAN.md` — Phased plan matches the final architecture, safety constraints and real-evidence gates.
 - `README.md` — Usage, supported fields, safety limits, development flow and known limitations match implementation.
@@ -83,10 +84,14 @@ This optimized package contains **85 files**. The list below is generated from t
 ## Automated/manual test support
 
 - `tests/FIXTURE_EXPECTATIONS.md` — Documents each adversarial fixture and its precise expected parser/runtime behavior.
-- `tests/MANUAL_TEST_REPORT_TEMPLATE.md` — Provides one result row for every M01-M63 case plus environment/build/evidence metadata.
+- `tests/MANUAL_TEST_REPORT_TEMPLATE.md` — Provides one result row for every M01-M67 case plus environment/build/evidence metadata.
 - `tests/PHASE_ACCEPTANCE_REPORT_TEMPLATE.md` — Forces weak-AI phase outputs to record changed files, commands, results, evidence and stop decisions.
 - `tests/content-contract.test.cjs` — Static contract tests cover unique dialog/popup logic, rerender reacquisition, text preservation and fail-closed behavior.
+- `tests/dom-behavior.test.cjs` — Executable jsdom tests drive the real content script through guard refusals, dropdown matching, multi-value labels and lifecycle stops.
+- `tests/helpers/dom-harness.cjs` — Loads the real runtime files into a laid-out jsdom document and reproduces the popup's structured-clone message boundary.
+- `tests/helpers/popup-harness.cjs` — Loads the real popup document and scripts with mocked clipboard and messaging so popup outcomes are observable.
 - `tests/package.test.cjs` — Verifies manifest references, exact host/order, runtime list, field order, forbidden fields, fixtures and PNG signatures.
+- `tests/popup-behavior.test.cjs` — Executable popup tests separate clipboard failures from unreachable-content-script failures and check partial reporting and text-only status.
 - `tests/safety.test.cjs` — Scans runtime for network/storage/credentials/unsafe sinks/submit paths, permission drift and logging leakage.
 - `tests/shared.test.cjs` — Unit coverage includes schema, BOM, unknown keys, byte boundaries, dates, numbers, duplicates and exact matching.
 

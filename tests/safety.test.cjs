@@ -6,9 +6,20 @@ const fs = require("node:fs");
 const path = require("node:path");
 
 const ROOT = path.resolve(__dirname, "..");
-const SOURCE_FILES = ["config.js", "shared.js", "popup.js", "content.js"];
 const read = (name) => fs.readFileSync(path.join(ROOT, name), "utf8");
+
+// Derived from the shipping file list so a newly packaged script cannot slip
+// past these scans by not being named here.
+const SOURCE_FILES = read("RUNTIME_FILE_LIST.txt")
+  .split(/\r?\n/)
+  .map((line) => line.trim())
+  .filter((line) => line.endsWith(".js"));
+
 const source = SOURCE_FILES.map(read).join("\n");
+
+test("every packaged script is covered by the safety scans", () => {
+  assert.deepEqual(SOURCE_FILES, ["config.js", "shared.js", "content.js", "popup.js"]);
+});
 
 test("runtime contains no network client or dynamic remote-load APIs", () => {
   const forbidden = [

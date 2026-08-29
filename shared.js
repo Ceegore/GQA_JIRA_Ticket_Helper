@@ -7,8 +7,15 @@
   "use strict";
 
   function normalizeText(value) {
+    // Zero-width and soft-hyphen characters are removed before composing so a
+    // combining mark separated by an invisible character still composes.
+    // NFC matters because Jira, macOS clipboards and exported ticket JSON can
+    // deliver decomposed umlauts while the configured aliases are composed.
+    // Without it, exact matching silently fails on German field names such as
+    // "Priorität" and on the create-new-option guard word "Hinzufügen".
     return String(value ?? "")
       .replace(/[\u200B\u200C\u200D\uFEFF\u00AD]/g, "")
+      .normalize("NFC")
       .replace(/\s+/g, " ")
       .trim()
       .toLowerCase();

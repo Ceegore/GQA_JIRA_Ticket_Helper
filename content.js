@@ -36,6 +36,20 @@
   ].join(",");
 
   const POPUP_ROOT_SELECTOR = '[role="listbox"], [role="menu"]';
+
+  // Anything inside an option popup is a *choice being offered*, never proof of
+  // the form's current state. Reading state from these subtrees caused two real
+  // failures: an open issue-type list made a Story dialog look like a Bug
+  // dialog, and an open dropdown made unselected values look already filled.
+  const OPTION_POPUP_SELECTOR = [
+    '[role="listbox"]',
+    '[role="menu"]',
+    '[role="option"]',
+    '[role="menuitem"]',
+    '[role="menuitemradio"]',
+    '[role="menuitemcheckbox"]'
+  ].join(",");
+
   const DEBUG = C.DEBUG ?? false;
 
   function log(message) {
@@ -65,9 +79,16 @@
     if (!(element instanceof Element) || !element.isConnected) return false;
     const style = getComputedStyle(element);
     if (style.display === "none" || style.visibility === "hidden") return false;
-    if (Number(style.opacity) === 0) return false;
+    // An unresolved opacity must not be read as 0; Number("") is 0 and would
+    // otherwise make every element invisible and every field silently skipped.
+    if (style.opacity !== "" && Number(style.opacity) === 0) return false;
     const rect = element.getBoundingClientRect();
     return rect.width > 0 && rect.height > 0;
+  }
+
+  function isInsideOptionPopup(element) {
+    if (!(element instanceof Element)) return false;
+    return element.closest(OPTION_POPUP_SELECTOR) !== null;
   }
 
   function isDisabled(element) {
@@ -86,10 +107,6 @@
     if (!(element instanceof Element)) return true;
     if (element.getAttribute("aria-readonly") === "true") return true;
     return "readOnly" in element && element.readOnly === true;
-  }
-
-  function normalizedElementText(element) {
-    return S.normalizeText(element?.innerText || element?.textContent || "");
   }
 
   function getAriaLabelledByText(element) {
@@ -189,6 +206,10 @@
       )
     ].filter((element) => {
       if (!isVisible(element)) return false;
+      // An open issue-type or project picker lists every other value near the
+      // top of the dialog. Accepting those as evidence would let a Story form
+      // pass the Bug guard, so offered choices never count as the current type.
+      if (isInsideOptionPopup(element)) return false;
       const rect = element.getBoundingClientRect();
       return rect.top < lowerBoundary && rect.bottom > dialogRect.top;
     });
@@ -208,7 +229,7 @@
       ...dialog.querySelectorAll(
         "button, input[type='submit'], input[type='button'], [role='button']"
       )
-    ].filter(isVisible);
+    ].filter(isVisible).filter((element) => !isInsideOptionPopup(element));
 
     return candidates.some((element) =>
       accessibleTextsForElement(element).some((text) =>
@@ -621,9 +642,30 @@
     return control.getAttribute("aria-haspopup") === "listbox";
   }
 
-  function leafTexts(element) {
+  /**
+   * Visible leaf texts under `element`.
+   *
+   * `skipOptionPopups` must be set whenever the result is used as evidence of a
+   * field's CURRENT value: Jira renders dropdown menus inside the same field
+   * container, so an open menu would otherwise report every offered option as
+   * already selected. Option matching itself must keep it off, because there
+   * the popup content is exactly what has to be read.
+   */
+  function leafTexts(element, { skipOptionPopups = false } = {}) {
+    if (skipOptionPopups && isInsideOptionPopup(element)) return [];
+
+    const filter = skipOptionPopups
+      ? {
+          acceptNode(node) {
+            return node.matches(OPTION_POPUP_SELECTOR)
+              ? NodeFilter.FILTER_REJECT
+              : NodeFilter.FILTER_ACCEPT;
+          }
+        }
+      : null;
+
     const output = [];
-    const walker = document.createTreeWalker(element, NodeFilter.SHOW_ELEMENT);
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_ELEMENT, filter);
     let node = walker.currentNode;
 
     while (node) {
@@ -635,6 +677,10 @@
     }
 
     return output;
+  }
+
+  function currentValueTexts(element) {
+    return leafTexts(element, { skipOptionPopups: true });
   }
 
   function optionMatchesExact(option, desiredValue) {
@@ -788,7 +834,7 @@
       return true;
     }
 
-    if (leafTexts(control).some((text) => S.normalizedExactMatch(text, desiredValue))) {
+    if (currentValueTexts(control).some((text) => S.normalizedExactMatch(text, desiredValue))) {
       return true;
     }
 
@@ -806,7 +852,7 @@
           .filter(Boolean)
       );
       if (controls.length !== 1 || controls[0] !== control) break;
-      if (leafTexts(node).some((text) => S.normalizedExactMatch(text, desiredValue))) {
+      if (currentValueTexts(node).some((text) => S.normalizedExactMatch(text, desiredValue))) {
         return true;
       }
       node = node.parentElement;
@@ -925,11 +971,16 @@
     return false;
   }
 
+  /**
+   * Returns how many of the requested values ended up on the field. The caller
+   * needs the counts, not a boolean: reporting a partly filled label field as
+   * "filled" would hide missing labels from the tester who reviews the form.
+   */
   async function selectMultipleValues(getControl, values, options = {}) {
     const cleanValues = S.sanitizeStringArray(values);
-    if (cleanValues.length === 0) return false;
+    if (cleanValues.length === 0) return { requested: 0, selected: 0 };
 
-    let filledAny = false;
+    let selectedCount = 0;
 
     for (const value of cleanValues) {
       const control = getControl();
@@ -939,7 +990,7 @@
       }
 
       if (currentFieldContainsExactValue(control, value)) {
-        filledAny = true;
+        selectedCount += 1;
         continue;
       }
 
@@ -949,11 +1000,11 @@
         options,
         getControl
       );
-      if (selected) filledAny = true;
+      if (selected) selectedCount += 1;
       await sleep(C.BETWEEN_FIELDS_MS);
     }
 
-    return filledAny;
+    return { requested: cleanValues.length, selected: selectedCount };
   }
 
   function setCheckboxTrueOnly(control, value) {
@@ -1048,13 +1099,26 @@
           getFreshControl
         );
         break;
-      case "multi-select":
-        success = await selectMultipleValues(
+      case "multi-select": {
+        const outcome = await selectMultipleValues(
           getFreshControl,
           rawValue,
           fieldConfig
         );
+        if (outcome.selected === 0) {
+          return { status: "skipped", reason: "not-filled" };
+        }
+        if (outcome.selected < outcome.requested) {
+          return {
+            status: "partial",
+            reason: "partial-values",
+            selected: outcome.selected,
+            requested: outcome.requested
+          };
+        }
+        success = true;
         break;
+      }
       case "checkbox-true-only":
         success = setCheckboxTrueOnly(control, rawValue);
         break;
@@ -1102,6 +1166,7 @@
 
     const plan = buildFieldPlan(ticket);
     let filled = 0;
+    let partial = 0;
     let skipped = 0;
     let stopped = null;
 
@@ -1121,6 +1186,9 @@
         if (result.status === "filled") {
           filled += 1;
           log(`${key}: filled`);
+        } else if (result.status === "partial") {
+          partial += 1;
+          log(`${key}: partly filled (${result.selected}/${result.requested})`);
         } else {
           skipped += 1;
           log(`${key}: skipped (${result.reason})`);
@@ -1134,7 +1202,7 @@
       await sleep(C.BETWEEN_FIELDS_MS);
     }
 
-    return { ok: true, filled, skipped, stopped };
+    return { ok: true, filled, partial, skipped, stopped };
   }
 
   let pasteInProgress = false;

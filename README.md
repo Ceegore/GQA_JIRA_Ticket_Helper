@@ -34,14 +34,20 @@ This replaces both `https://YOUR-COMPANY.atlassian.net/*` entries and writes UTF
 
 ## 3. Automated checks
 
-Requires Node.js:
+Requires Node.js (see `engines` in `package.json`):
 
 ```bash
-node --test tests/*.test.cjs
+npm ci
+npm test
 node tools/preflight.cjs
 ```
 
-The optimized handoff contains 40 dependency-free tests covering parsing, UTF-8 byte limits, schema strictness, exact matching, permission/safety drift, deterministic field scope, dialog/dropdown contracts and package structure. Normal preflight is expected to warn while hostname, real DOM evidence and the completed manual report are still pending.
+The suite contains 101 tests. The runtime itself stays dependency-free; the pinned dev dependencies exist only for the test harness and Mozilla's add-on linter.
+
+- **Unit and static tests** cover parsing, UTF-8 byte limits, schema strictness, exact matching, permission/safety drift, deterministic field scope and package structure.
+- **Executable behaviour tests** load `config.js`, `shared.js`, `content.js` and the real popup into a jsdom document and drive them through the exact message the popup sends. They prove the dialog guard refuses wrong dialogs, that Create/Erstellen is never clicked, that dropdown matching stays exact, and that multi-value fields are either complete or reported as partly filled.
+
+Preflight additionally runs Mozilla's `web-ext lint` against a runtime-only staging copy. Normal preflight is expected to warn while hostname, real DOM evidence and the completed manual report are still pending.
 
 Release mode is intentionally stricter:
 
@@ -150,7 +156,7 @@ Verify sequential labels, de-duplication, React control replacement, no create-n
 
 ### Phase 5 — full real-Jira acceptance
 
-Execute all M01-M62 rows in `MANUAL_ACCEPTANCE_TESTS.md` and save `tests/MANUAL_TEST_REPORT_COMPLETED.md`.
+Execute all M01-M67 rows in `MANUAL_ACCEPTANCE_TESTS.md` and save `tests/MANUAL_TEST_REPORT_COMPLETED.md`.
 
 ## 9. Definition of Done
 
@@ -171,7 +177,7 @@ Then stop. Do not expand v1 scope for convenience.
 Use `TROUBLESHOOTING.md` and `FIELD_ADAPTER_GUIDE.md`; do not randomly rewrite the engine. After any repository change:
 
 ```bash
-node --test tests/*.test.cjs
+npm test
 node tools/update-file-manifest.cjs
 node tools/preflight.cjs
 ```

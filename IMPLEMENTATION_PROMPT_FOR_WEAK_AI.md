@@ -116,12 +116,12 @@ Impediment: `true` checks if possible; `false`/missing/wrong type does nothing; 
 After every generic change:
 
 ```bash
-node --test tests/*.test.cjs
+npm test
 node tools/update-file-manifest.cjs
 node tools/preflight.cjs
 ```
 
-Then execute M01-M62 in `MANUAL_ACCEPTANCE_TESTS.md` and save `tests/MANUAL_TEST_REPORT_COMPLETED.md`.
+Then execute M01-M67 in `MANUAL_ACCEPTANCE_TESTS.md` and save `tests/MANUAL_TEST_REPORT_COMPLETED.md`.
 
 ### Phase 6 — release
 
@@ -148,6 +148,6 @@ Never include clipboard values in exceptions, logs or popup messages.
 
 ## Stop condition and required report
 
-When every R01-R35 and applicable M01-M62 item passes, release preflight/package/signing pass and manual Create remains the only submission path, stop implementing.
+When every R01-R35 and applicable M01-M67 item passes, release preflight/package/signing pass and manual Create remains the only submission path, stop implementing.
 
 Report exact files changed, tests/commands/exit status, selectors/evidence added, manual results and remaining environmental limitations. Do not propose extra product features.

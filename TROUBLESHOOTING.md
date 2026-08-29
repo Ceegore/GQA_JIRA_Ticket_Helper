@@ -11,6 +11,12 @@ Do not respond to one failure by rewriting the generic engine. Work in this orde
 5. Confirm JSON syntax; one leading BOM is tolerated.
 6. Re-copy using `tools/copy-sample-ticket.ps1` when testing the baseline.
 
+## Popup reports a clipboard problem
+
+1. This message means the clipboard itself could not be read, not that the page is wrong.
+2. Re-copy the ticket JSON and click Paste again.
+3. Confirm Firefox is not blocking clipboard access for the popup.
+
 ## Popup cannot reach helper
 
 1. Confirm the exact Jira host is configured.
@@ -62,6 +68,20 @@ Do not respond to one failure by rewriting the generic engine. Work in this orde
 2. Confirm current code reacquires the dialog/control for every label.
 3. Run `duplicate-labels.json` and existing+unknown+existing manual cases.
 4. Inspect whether the newly rendered input retains the same accessible label/selector.
+
+## Popup reports a field as partly filled
+
+1. This means a multi-value field received some, but not all, requested values.
+2. Compare the applied values against the ticket JSON before creating the issue.
+3. Missing values are usually spelling differences: matching is exact after whitespace, case and Unicode NFC normalization.
+4. Confirm the missing value exists in the Jira catalog; the helper never creates new labels or options.
+
+## Field is skipped although its control is visible
+
+1. Confirm the control is not disabled or read-only; both are skipped by design.
+2. Confirm only one control matches the field's label; ambiguity fails closed.
+3. Check whether the control can only be opened by clicking a submit-capable element, such as a `<button>` inside a `<form>` with no `type="button"`. Those clicks are refused on purpose, because they can submit the issue.
+4. If real DOM evidence shows a safe, stable control, add one exact selector in `config.js` rather than weakening `safeClick()`.
 
 ## Processing stops partway through
 

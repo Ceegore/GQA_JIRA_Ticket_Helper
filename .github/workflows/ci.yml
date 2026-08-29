@@ -21,12 +21,18 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+          cache: npm
+
+      # The behaviour suites and the Mozilla add-on linter both need the pinned
+      # dev dependencies, so the gate installs from the committed lockfile.
+      - name: Install pinned dev dependencies
+        run: npm ci
 
       - name: Run automated test suite
-        run: node --test tests/shared.test.cjs tests/safety.test.cjs tests/content-contract.test.cjs tests/package.test.cjs
+        run: npm test
 
-      - name: Run preflight verification
-        run: node tools/preflight.cjs
+      - name: Run preflight verification (includes the Mozilla add-on linter)
+        run: npm run preflight
 
       - name: Test runtime packaging
-        run: node tools/build-runtime-package.cjs
+        run: npm run build

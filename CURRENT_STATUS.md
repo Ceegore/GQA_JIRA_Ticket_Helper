@@ -1,23 +1,25 @@
 # Current package status
 
-## Optimized implementation prepared
+## Verified by executable tests
 
 - Firefox Manifest V3 runtime with one exact Jira host placeholder and `clipboardRead` only.
 - Explicit Firefox no-data-collection declaration.
-- One-button popup with strict schema/UTF-8 byte parsing and safe-stop feedback.
-- Deterministic 16-field plan; unknown keys cannot add capabilities.
-- Unique-dialog guard using exact compact header evidence plus Create presence.
+- One-button popup with strict schema/UTF-8 byte parsing, distinct clipboard and page failure messages, and safe-stop feedback.
+- Deterministic 16-field plan; unknown and prototype keys cannot add capabilities.
+- Unique-dialog guard using exact compact header evidence plus Create presence, refusing wrong project, wrong issue type, ambiguous and Create-less dialogs.
+- Offered dropdown options are never accepted as evidence of the current project, issue type or field value.
 - Accessible-name/label discovery that fails closed on ambiguity.
-- Disabled/read-only and submit-capable control protection.
-- Native input/textarea setter preserving accepted text.
+- Disabled/read-only and submit-capable control protection; Create/Erstellen is never clicked and no form is ever submitted.
+- Native input/textarea setter preserving accepted text verbatim.
 - Plaintext contenteditable adapter restricted to proven editable elements.
 - Control-associated/new-popup dropdown sessions, unique exact matching and query restoration.
-- Multi-label de-duplication and control reacquisition after React rerender.
+- Unicode NFC matching so decomposed German field names and option values still match.
+- Multi-label de-duplication, control reacquisition after React rerender, and honest partial reporting when only some values could be applied.
 - Per-field isolation and dialog revalidation before every field.
-- Expanded static/unit/package contract tests.
+- 101 automated tests: static/unit contracts plus executable jsdom suites that drive the real content script and the real popup.
+- Mozilla `web-ext lint` runs inside preflight against a runtime-only staging copy and reports no errors or warnings.
 - DOM/dialog/dropdown evidence collectors and structured templates.
-- Strong normal/release preflight, package-index and SHA verification.
-- Complete independent review and file-by-file audit under `review/`.
+- Strong normal/release preflight, package-index and SHA verification, enforced in CI on Linux, Windows and macOS.
 
 ## Still unavailable without the internal environment
 
@@ -33,8 +35,17 @@
 
 These are environmental evidence gaps, not permission to guess selectors or expand scope.
 
+## Still required for a public AMO listing
+
+These are decisions and approvals, not code:
+
+- approval to publish the exact Jira hostname, project key and field names,
+- product name/trademark approval and Jira attribution,
+- permanent Gecko add-on ID, rights holder, licence, support email/site,
+- reviewer-accessible Jira test context and reviewer notes.
+
 ## Release status
 
 **PASS WITH REAL-JIRA VALIDATION REQUIRED — NOT RELEASE-READY.**
 
-The optimized package passes automated tests and normal preflight once its generated inventory is current. Release preflight must continue to fail until the hostname is configured, real DOM evidence is approved, the pending marker is removed, and `tests/MANUAL_TEST_REPORT_COMPLETED.md` exists.
+Automated checks, executable behaviour verification and the official add-on linter all pass. Release preflight must continue to fail until the hostname is configured, real DOM evidence is approved, the pending marker is removed, and `tests/MANUAL_TEST_REPORT_COMPLETED.md` exists.

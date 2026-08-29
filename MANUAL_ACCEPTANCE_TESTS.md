@@ -109,6 +109,10 @@ Repeat applicable rows for every supported select/person field.
 | M61 | Force dialog loss after some fields | Popup reports filled/skipped counts plus safe stop | insufficient operator feedback |
 | M62 | Inspect configured host in manifest and try another Atlassian tenant | Only exact company tenant has content-script access | host-scope defect |
 | M63 | Start slow paste, close/reopen popup, click Paste again | Second attempt rejected with concurrency message; first finishes safely | concurrency/mutex defect |
+| M64 | PERMAQA **Story** dialog with the issue-type picker open so the list shows "Bug" | Paste is refused; no field changes | **BLOCKER** wrong-issue-type guard defect |
+| M65 | Labels field where Jira keeps the option menu open between selections; paste three existing labels | All three labels are applied | silent multi-value loss |
+| M66 | Paste two labels where only one exists in Jira | Popup reports the field as partly filled, not filled | dishonest success reporting |
+| M67 | Deny or empty the clipboard, then click Paste | Popup names a clipboard problem, not an unreachable-page problem | misleading operator feedback |
 
 ## Release criterion
 

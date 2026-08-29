@@ -16,8 +16,10 @@ Release only after every required item is checked and evidence is retained inter
 
 ## Automated gates
 
-- [ ] `node --test tests/*.test.cjs` passes with the documented count or higher.
+- [ ] `npm ci` installs the pinned dev tooling from the committed lockfile.
+- [ ] `npm test` passes with the documented count or higher, including the executable jsdom behaviour suites.
 - [ ] `node tools/preflight.cjs` passes (warnings allowed only for explicitly pending pre-release evidence).
+- [ ] Preflight's Mozilla add-on linter step reports no errors and no warnings.
 - [ ] `node tools/update-file-manifest.cjs` run after the last repository change.
 - [ ] `node tools/preflight.cjs --release` passes with no warning/failure.
 - [ ] All JSON parses and all JS/CJS passes `node --check` through preflight.
@@ -26,7 +28,7 @@ Release only after every required item is checked and evidence is retained inter
 
 ## Manual acceptance
 
-- [ ] All applicable M01-M62 rows in `MANUAL_ACCEPTANCE_TESTS.md` pass.
+- [ ] All applicable M01-M67 rows in `MANUAL_ACCEPTANCE_TESTS.md` pass.
 - [ ] Completed evidence saved as `tests/MANUAL_TEST_REPORT_COMPLETED.md`.
 - [ ] Wrong project, Story and ambiguous-dialog tests fail closed.
 - [ ] Unknown, near-match, duplicate and unrelated-list dropdown tests skip safely.
@@ -65,6 +67,9 @@ Release only after every required item is checked and evidence is retained inter
 - [ ] Reviewer credentials are stored only in private AMO reviewer notes.
 - [ ] M57A proves the final Firefox data-collection declaration dynamically.
 - [ ] M63 proves a second concurrent paste is rejected.
+- [ ] M64 proves a Story dialog is refused even while its type picker offers Bug.
+- [ ] M65/M66 prove multi-value labels are complete, or honestly reported as partly filled.
+- [ ] M67 proves a clipboard failure is reported as a clipboard failure.
 - [ ] Labels/multi-select input count has a hard upper bound (<= 20).
 - [ ] Production debug logging is disabled in release builds.
 - [ ] Tested Firefox minimum is declared with gecko.strict_min_version ("140.0").

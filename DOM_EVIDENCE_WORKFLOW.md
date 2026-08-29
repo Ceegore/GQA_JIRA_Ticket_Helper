@@ -80,7 +80,7 @@ Avoid generated classes, positional selectors, text substring selectors and scre
 Run:
 
 ```bash
-node --test tests/*.test.cjs
+npm test
 node tools/preflight.cjs
 ```
 

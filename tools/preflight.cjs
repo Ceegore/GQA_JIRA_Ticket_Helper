@@ -2,6 +2,7 @@
 
 const crypto = require("node:crypto");
 const fs = require("node:fs");
+const os = require("node:os");
 const path = require("node:path");
 const { spawnSync } = require("node:child_process");
 
@@ -38,7 +39,9 @@ const required = [
   "tools/dialog-guard-probe.js", "tools/update-file-manifest.cjs", "tools/validate-ticket.cjs",
   "tools/build-runtime-package.cjs", "tools/configure-jira-host.cjs", "tools/generate-icons.cjs",
   "tests/shared.test.cjs", "tests/safety.test.cjs", "tests/package.test.cjs",
-  "tests/content-contract.test.cjs", "dom/DIALOG_GUARD_EVIDENCE_TEMPLATE.json"
+  "tests/content-contract.test.cjs", "tests/dom-behavior.test.cjs",
+  "tests/popup-behavior.test.cjs", "tests/helpers/dom-harness.cjs",
+  "tests/helpers/popup-harness.cjs", "dom/DIALOG_GUARD_EVIDENCE_TEMPLATE.json"
 ];
 
 for (const rel of required) {
@@ -257,6 +260,67 @@ try {
   fail(`cannot verify FILE_MANIFEST_SHA256.txt: ${error.message}`);
 }
 
+runAddonLinter();
+
+/*
+ * Mozilla's own linter is what AMO runs on upload, so it belongs in the gate
+ * rather than in a manual step. It is executed against a staging copy that
+ * contains exactly the runtime files, because linting the repository would
+ * report development-only tooling that never ships.
+ */
+function runAddonLinter() {
+  const webExtBin = path.join(ROOT, "node_modules", "web-ext", "bin", "web-ext.js");
+  if (!fs.existsSync(webExtBin)) {
+    const message = "web-ext is not installed; run npm ci to enable the Mozilla add-on linter";
+    if (releaseMode) fail(message);
+    else warn(message);
+    return;
+  }
+
+  const stage = fs.mkdtempSync(path.join(os.tmpdir(), "gqa-lint-"));
+  try {
+    for (const rel of read("RUNTIME_FILE_LIST.txt").split(/\r?\n/).map((s) => s.trim()).filter(Boolean)) {
+      const source = path.join(ROOT, rel);
+      if (!fs.existsSync(source)) {
+        fail(`cannot lint: runtime file missing: ${rel}`);
+        return;
+      }
+      const destination = path.join(stage, rel);
+      fs.mkdirSync(path.dirname(destination), { recursive: true });
+      fs.copyFileSync(source, destination);
+    }
+
+    const result = spawnSync(
+      process.execPath,
+      [webExtBin, "lint", "--source-dir", stage, "--output", "json"],
+      { cwd: ROOT, encoding: "utf8" }
+    );
+
+    let report;
+    try {
+      report = JSON.parse(result.stdout);
+    } catch {
+      fail(`Mozilla add-on linter produced no parsable report (exit ${result.status})`);
+      return;
+    }
+
+    const errors = report.errors || [];
+    const warnings = report.warnings || [];
+    const notices = report.notices || [];
+
+    for (const entry of [...errors, ...warnings]) {
+      const where = entry.file ? ` (${entry.file})` : "";
+      fail(`add-on linter: ${entry.code}: ${entry.message}${where}`);
+    }
+
+    if (errors.length === 0 && warnings.length === 0) {
+      ok(`Mozilla add-on linter reports no errors or warnings (${notices.length} notices)`);
+    }
+  } finally {
+    fs.rmSync(stage, { recursive: true, force: true });
+  }
+}
+
 const evidencePending = exists("dom/ACTUAL_DOM_NOT_YET_CAPTURED.md");
 const completedManualReport = exists("tests/MANUAL_TEST_REPORT_COMPLETED.md");
 if (evidencePending) {
@@ -276,6 +340,22 @@ const testFiles = fs.readdirSync(path.join(ROOT, "tests"))
   .filter((name) => name.endsWith(".test.cjs"))
   .sort()
   .map((name) => path.join("tests", name));
+
+// The npm script names its files explicitly so it behaves the same in every
+// shell. That only stays true if a newly added suite is added to it as well.
+try {
+  const testScript = JSON.parse(read("package.json")).scripts?.test || "";
+  const missing = testFiles
+    .map((rel) => rel.split(path.sep).join("/"))
+    .filter((rel) => !testScript.includes(rel));
+  if (missing.length > 0) {
+    fail(`npm test script does not run: ${missing.join(", ")}`);
+  } else {
+    ok(`npm test script runs all ${testFiles.length} test files`);
+  }
+} catch (error) {
+  fail(`cannot verify npm test script: ${error.message}`);
+}
 if (testFiles.length === 0) {
   fail("no automated test files found");
 } else {

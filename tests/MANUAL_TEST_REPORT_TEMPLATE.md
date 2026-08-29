@@ -83,6 +83,10 @@ Save a completed copy as `tests/MANUAL_TEST_REPORT_COMPLETED.md`. Do not overwri
 | M61 | | | |
 | M62 | | | |
 | M63 | | | |
+| M64 | | | |
+| M65 | | | |
+| M66 | | | |
+| M67 | | | |
 
 ## Field-specific evidence
 
@@ -106,11 +110,11 @@ Save a completed copy as `tests/MANUAL_TEST_REPORT_COMPLETED.md`. Do not overwri
 
 ## Final gates
 
-- `node --test tests/*.test.cjs` command, count, exit status:
+- `npm test` command, count, exit status:
 - `node tools/preflight.cjs` result:
 - `node tools/preflight.cjs --release` result:
 - SHA manifest verified after final evidence files: yes/no
-- All applicable M01-M62 PASS: yes/no
+- All applicable M01-M67 PASS: yes/no
 - Any BLOCKER/HIGH defects:
 - Remaining environmental known unknowns:
 - Reviewer release recommendation:

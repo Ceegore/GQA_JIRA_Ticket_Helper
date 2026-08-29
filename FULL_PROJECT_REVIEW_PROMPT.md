@@ -312,7 +312,7 @@ Run all existing automated tests. Do not trust a green result by itself.
 At minimum run:
 
 ```bash
-node --test tests/*.test.cjs
+npm test
 node tools/preflight.cjs
 ```
 

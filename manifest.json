@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "GQA Bug Reporter Helper for Jira",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Internal QA helper that fills supported fields in an open Jira Bug form from user-copied JSON and never submits the issue automatically.",
   "icons": {
     "32": "icons/icon-32.png",

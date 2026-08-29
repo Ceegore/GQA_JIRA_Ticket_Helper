@@ -150,7 +150,7 @@ Impediment: only `true` may check; `false`/missing/wrong type does nothing; neve
 After every generic change:
 
 ```bash
-node --test tests/*.test.cjs
+npm test
 node tools/update-file-manifest.cjs
 node tools/preflight.cjs
 ```
@@ -159,7 +159,7 @@ Do not trust green tests without reading what they assert. Keep static safety, p
 
 ## 12. Phase 6 — complete real-Jira acceptance
 
-Execute M01-M62 in `MANUAL_ACCEPTANCE_TESTS.md`, record exact Firefox/Jira context and evidence, and save `tests/MANUAL_TEST_REPORT_COMPLETED.md`. Any N/A requires a concrete absent-control reason and review.
+Execute M01-M67 in `MANUAL_ACCEPTANCE_TESTS.md`, record exact Firefox/Jira context and evidence, and save `tests/MANUAL_TEST_REPORT_COMPLETED.md`. Any N/A requires a concrete absent-control reason and review.
 
 ## 13. Phase 7 — release gate and packaging
 
@@ -197,4 +197,4 @@ A broad refactor is not evidence. A convenience feature is not a fix.
 
 ## 16. Definition of Done
 
-Every R01-R35 requirement is PASS through automated or reviewed real-Jira evidence; every applicable M01-M62 test passes; release preflight, archive inspection and signed deployment pass; final submission remains manual. Then stop v1 development.
+Every R01-R35 requirement is PASS through automated or reviewed real-Jira evidence; every applicable M01-M67 test passes; release preflight, archive inspection and signed deployment pass; final submission remains manual. Then stop v1 development.

@@ -8,15 +8,18 @@ Use Firefox `about:debugging` -> **This Firefox** -> **Load Temporary Add-on** a
 
 1. Configure the exact Jira Cloud hostname with `tools/configure-jira-host.ps1`.
 2. Capture and approve real dialog/field/dropdown/editor evidence.
-3. Complete all M01-M62 manual tests and save `tests/MANUAL_TEST_REPORT_COMPLETED.md`.
+3. Complete all M01-M67 manual tests and save `tests/MANUAL_TEST_REPORT_COMPLETED.md`.
 4. Remove `dom/ACTUAL_DOM_NOT_YET_CAPTURED.md` only after evidence approval.
 5. Run:
 
 ```bash
-node --test tests/*.test.cjs
+npm ci
+npm test
 node tools/update-file-manifest.cjs
 node tools/preflight.cjs --release
 ```
+
+Release preflight also runs Mozilla's own add-on linter against a runtime-only staging copy, so `npm ci` must have been executed first.
 
 6. Build the runtime-only candidate with `tools/build-runtime-package.ps1`.
 7. Inspect the archive against `RUNTIME_FILE_LIST.txt`.

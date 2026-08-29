@@ -8,7 +8,7 @@ Copy schema-versioned ticket JSON -> open the **PERMAQA / Bug** Jira create dial
 
 ## Current verdict
 
-The repository-wide audit has been executed. The optimized package is **PASS WITH REAL-JIRA VALIDATION REQUIRED**: automated checks pass, but hostname configuration, internal DOM/option/editor evidence, M01-M62 manual acceptance and signed deployment remain mandatory. Read `review/FINAL_REVIEW_REPORT.md` for findings and exact changes.
+The repository-wide audit has been executed. The optimized package is **PASS WITH REAL-JIRA VALIDATION REQUIRED**: automated checks pass, but hostname configuration, internal DOM/option/editor evidence, M01-M67 manual acceptance and signed deployment remain mandatory. Read `review/FINAL_REVIEW_REPORT.md` for findings and exact changes.
 
 ## If you are the implementation AI
 
@@ -21,7 +21,7 @@ The repository-wide audit has been executed. The optimized package is **PASS WIT
 7. After every change run:
 
 ```bash
-node --test tests/*.test.cjs
+npm test
 node tools/update-file-manifest.cjs
 node tools/preflight.cjs
 ```
