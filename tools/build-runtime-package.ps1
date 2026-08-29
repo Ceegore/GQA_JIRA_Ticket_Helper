@@ -18,7 +18,10 @@ try {
     foreach ($File in $Files) {
         $Source = Join-Path $Root $File
         if (-not (Test-Path $Source)) { throw "Runtime file missing: $File" }
-        Copy-Item $Source (Join-Path $Stage $File)
+        $Dest = Join-Path $Stage $File
+        $DestDir = Split-Path -Parent $Dest
+        if (-not (Test-Path $DestDir)) { New-Item -ItemType Directory -Force -Path $DestDir | Out-Null }
+        Copy-Item $Source $Dest
     }
 
     if (Test-Path $Zip) { Remove-Item -Force $Zip }

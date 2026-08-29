@@ -36,7 +36,7 @@
   ].join(",");
 
   const POPUP_ROOT_SELECTOR = '[role="listbox"], [role="menu"]';
-  const DEBUG = true;
+  const DEBUG = C.DEBUG ?? false;
 
   function log(message) {
     if (!DEBUG) return;
@@ -992,7 +992,11 @@
       return S.isNonBlankString(rawValue) ? null : "empty";
     }
     if (fieldConfig.type === "multi-select") {
-      return S.sanitizeStringArray(rawValue).length > 0 ? null : "empty";
+      const clean = S.sanitizeStringArray(rawValue);
+      if (clean.length === 0) return "empty";
+      const maxAllowed = C.MAX_MULTI_SELECT_VALUES || 20;
+      if (clean.length > maxAllowed) return "too-many-values";
+      return null;
     }
     if (fieldConfig.type === "date") {
       return S.isIsoDate(rawValue) ? null : "invalid-date";
@@ -1130,10 +1134,29 @@
     return { ok: true, filled, skipped, stopped };
   }
 
+  let pasteInProgress = false;
+
+  async function handlePasteTicket(ticket) {
+    if (pasteInProgress) {
+      return {
+        ok: false,
+        error: "A ticket paste is already in progress."
+      };
+    }
+
+    pasteInProgress = true;
+    try {
+      return await pasteTicket(ticket);
+    } finally {
+      pasteInProgress = false;
+    }
+  }
+
   browser.runtime.onMessage.addListener((message) => {
     if (!message || message.type !== "GQA_PASTE_TICKET") return undefined;
-    return pasteTicket(message.ticket);
+    return handlePasteTicket(message.ticket);
   });
 
   log("content script loaded");
 })();
+

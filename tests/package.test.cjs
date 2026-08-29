@@ -54,7 +54,7 @@ test("manifest content-script order and host scope are exact", () => {
   assert.equal(manifest.host_permissions[0].includes("*://*/*"), false);
 });
 
-test("runtime-only file list is complete, unique and root-scoped", () => {
+test("runtime-only file list is complete, unique and properly scoped", () => {
   const files = read("RUNTIME_FILE_LIST.txt").split(/\r?\n/).map((x) => x.trim()).filter(Boolean);
   assert.equal(new Set(files).size, files.length);
   assert.deepEqual(files, [
@@ -64,11 +64,33 @@ test("runtime-only file list is complete, unique and root-scoped", () => {
     "content.js",
     "popup.html",
     "popup.css",
-    "popup.js"
+    "popup.js",
+    "icons/icon-16.png",
+    "icons/icon-32.png",
+    "icons/icon-48.png",
+    "icons/icon-64.png",
+    "icons/icon-96.png"
   ]);
   for (const file of files) {
-    assert.equal(file.includes("/"), false, file);
     assert.equal(fs.existsSync(path.join(ROOT, file)), true, file);
+  }
+});
+
+test("manifest specifies gecko strict_min_version", () => {
+  assert.equal(manifest.browser_specific_settings?.gecko?.strict_min_version, "140.0");
+});
+
+test("manifest icons exist and are valid PNG images", () => {
+  const iconPaths = [
+    ...Object.values(manifest.icons || {}),
+    ...Object.values(manifest.action?.default_icon || {})
+  ];
+  assert.ok(iconPaths.length > 0);
+  for (const iconPath of iconPaths) {
+    assert.equal(fs.existsSync(path.join(ROOT, iconPath)), true, iconPath);
+    const dimensions = pngDimensions(iconPath);
+    assert.ok(dimensions.width >= 16, `${iconPath} width`);
+    assert.ok(dimensions.height >= 16, `${iconPath} height`);
   }
 });
 
@@ -123,3 +145,4 @@ test("reference screenshots are valid non-empty PNG files", () => {
     assert.ok(dimensions.height > 500, `${name} height`);
   }
 });
+

@@ -48,8 +48,29 @@ Release only after every required item is checked and evidence is retained inter
 
 ## Packaging and deployment
 
-- [ ] `tools/build-runtime-package.ps1` creates runtime-only ZIP/XPI candidate.
+- [ ] `tools/build-runtime-package.cjs` or `tools/build-runtime-package.ps1` creates runtime-only ZIP/XPI candidate.
 - [ ] Runtime archive inspected; no development/evidence files included.
 - [ ] Company approval and required Mozilla signing/distribution process completed.
 - [ ] Final Firefox Release-channel installation tested.
 - [ ] Human tester understands that visual review and manual Create remain mandatory.
+
+## AMO / public-release gates
+
+- [ ] Public disclosure of exact Jira hostname/project/field names/source is approved.
+- [ ] Product name/trademark use is approved; Jira attribution/disclaimer is present.
+- [ ] Permanent Gecko add-on ID is approved and AMO uniqueness confirmed.
+- [ ] Rights holder and AMO license selection are approved.
+- [ ] Support email/site are approved.
+- [ ] Reviewer-accessible Jira test account/context is verified from outside the internal environment.
+- [ ] Reviewer credentials are stored only in private AMO reviewer notes.
+- [ ] M57A proves the final Firefox data-collection declaration dynamically.
+- [ ] M63 proves a second concurrent paste is rejected.
+- [ ] Labels/multi-select input count has a hard upper bound (<= 20).
+- [ ] Production debug logging is disabled in release builds.
+- [ ] Tested Firefox minimum is declared with gecko.strict_min_version ("140.0").
+- [ ] Official linter passes on the exact staged upload files.
+- [ ] AMO upload validator has no unresolved errors/warnings.
+- [ ] Final unsigned candidate SHA-256/source SHA/tool versions are recorded.
+- [ ] Final Mozilla-signed XPI is installed and smoke-tested in Firefox Release.
+- [ ] Final signed XPI SHA-256 and AMO version ID are recorded.
+

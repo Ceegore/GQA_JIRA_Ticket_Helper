@@ -44,3 +44,20 @@ test("text inputs preserve the supplied string and role=textbox alone is not edi
   assert.match(content, /function isEditableElement/);
   assert.doesNotMatch(content, /getAttribute\("role"\) === "textbox"\) \{\s*return replaceContentEditableText/s);
 });
+
+test("import operations are protected by a single in-flight mutex lock", () => {
+  assert.match(content, /let pasteInProgress = false;/);
+  assert.match(content, /if \(pasteInProgress\)\s*\{\s*return \{\s*ok:\s*false,\s*error:\s*"A ticket paste is already in progress\."/);
+  assert.match(content, /pasteInProgress = true;/);
+  assert.match(content, /finally\s*\{\s*pasteInProgress = false;\s*\}/);
+});
+
+test("multi-select validation enforces maximum value limit", () => {
+  assert.match(content, /clean\.length > maxAllowed/);
+  assert.match(content, /return "too-many-values"/);
+});
+
+test("production debug logging is configured from GQA_CONFIG", () => {
+  assert.match(content, /const DEBUG = C\.DEBUG \?\? false;/);
+});
+

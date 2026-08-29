@@ -77,6 +77,12 @@ test("sanitizeStringArray removes invalid, blank and normalized duplicates", () 
   assert.deepEqual(S.sanitizeStringArray(123), []);
   assert.deepEqual(S.sanitizeStringArray({}), []);
   assert.deepEqual(S.sanitizeStringArray([]), []);
+
+  const twentyItems = Array.from({ length: 20 }, (_, i) => `label_${i}`);
+  assert.equal(S.sanitizeStringArray(twentyItems).length, 20);
+
+  const twentyOneItems = Array.from({ length: 21 }, (_, i) => `label_${i}`);
+  assert.equal(S.sanitizeStringArray(twentyOneItems).length, 21);
 });
 
 test("utf8ByteLength measures bytes rather than JavaScript characters", () => {

@@ -1,0 +1,19 @@
+{
+  "name": "gqa-jira-bug-reporter-helper",
+  "version": "1.1.0",
+  "private": true,
+  "description": "Internal QA helper that fills supported fields in an open Jira Bug form from user-copied JSON and never submits the issue automatically.",
+  "scripts": {
+    "test": "node --test tests/*.test.cjs",
+    "preflight": "node tools/preflight.cjs",
+    "preflight:release": "node tools/preflight.cjs --release",
+    "build": "node tools/build-runtime-package.cjs",
+    "update-manifest": "node tools/update-file-manifest.cjs"
+  },
+  "devDependencies": {
+    "web-ext": "^8.4.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

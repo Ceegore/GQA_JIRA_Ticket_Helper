@@ -7,7 +7,7 @@ const { spawnSync } = require("node:child_process");
 
 const ROOT = path.resolve(__dirname, "..");
 const releaseMode = process.argv.includes("--release");
-const EXCLUDED_TOP_LEVEL = new Set([".git", "dist"]);
+const EXCLUDED_TOP_LEVEL = new Set([".git", ".gitignore", "dist", ".github", "node_modules"]);
 let failed = false;
 let warned = false;
 
@@ -107,10 +107,24 @@ if (manifest) {
   const gecko = manifest.browser_specific_settings?.gecko;
   if (typeof gecko?.id === "string" && gecko.id.length > 0) ok("Firefox extension ID is present");
   else fail("browser_specific_settings.gecko.id is missing");
+  if (typeof gecko?.strict_min_version === "string" && gecko.strict_min_version.length > 0) {
+    ok("Firefox strict_min_version is present");
+  } else {
+    fail("browser_specific_settings.gecko.strict_min_version is missing");
+  }
   if (JSON.stringify(gecko?.data_collection_permissions) === JSON.stringify({ required: ["none"] })) {
     ok("Firefox data collection declaration is required:none");
   } else {
     fail("Firefox data collection declaration must be {required:[\"none\"]}");
+  }
+
+  const manifestIcons = [
+    ...Object.values(manifest.icons || {}),
+    ...Object.values(manifest.action?.default_icon || {})
+  ];
+  for (const icon of manifestIcons) {
+    if (exists(icon)) ok(`manifest icon exists: ${icon}`);
+    else fail(`manifest icon missing: ${icon}`);
   }
 
   const serialized = JSON.stringify(manifest);
@@ -140,7 +154,9 @@ if (manifest) {
 
 const expectedRuntimeFiles = [
   "manifest.json", "config.js", "shared.js", "content.js",
-  "popup.html", "popup.css", "popup.js"
+  "popup.html", "popup.css", "popup.js",
+  "icons/icon-16.png", "icons/icon-32.png", "icons/icon-48.png",
+  "icons/icon-64.png", "icons/icon-96.png"
 ];
 const runtimeList = read("RUNTIME_FILE_LIST.txt")
   .split(/\r?\n/)
@@ -154,8 +170,22 @@ if (JSON.stringify(runtimeList) === JSON.stringify(expectedRuntimeFiles)) {
 for (const rel of runtimeList) {
   if (exists(rel)) ok(`runtime package file exists: ${rel}`);
   else fail(`runtime package file missing: ${rel}`);
-  if (rel.includes("/")) fail(`runtime package file is not root-scoped: ${rel}`);
+  if (rel.includes("/") && !rel.startsWith("icons/")) fail(`runtime package file is not properly scoped: ${rel}`);
 }
+
+require(path.join(ROOT, "config.js"));
+const C = globalThis.GQA_CONFIG;
+if (C.DEBUG === false) {
+  ok("production debug logging is disabled");
+} else if (releaseMode) {
+  fail("DEBUG logging must be disabled in release mode");
+}
+if (typeof C.MAX_MULTI_SELECT_VALUES === "number" && C.MAX_MULTI_SELECT_VALUES <= 20) {
+  ok(`MAX_MULTI_SELECT_VALUES is bounded (${C.MAX_MULTI_SELECT_VALUES})`);
+} else {
+  fail("MAX_MULTI_SELECT_VALUES must be defined and <= 20");
+}
+
 
 const runtimeSource = ["config.js", "shared.js", "content.js", "popup.js"].map(read).join("\n");
 const forbiddenPatterns = [

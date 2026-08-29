@@ -1,17 +1,27 @@
 # Complete package index
 
-This optimized package contains **74 files**. The list below is generated from the completed recursive audit; every final file is accounted for exactly once. No file under `tools/`, `tests/`, `reference/`, `dom/`, `review/` or `prompts/` may be referenced by the runtime manifest.
+This optimized package contains **84 files**. The list below is generated from the completed recursive audit; every final file is accounted for exactly once. No file under `tools/`, `tests/`, `reference/`, `dom/`, `review/`, `docs/` or `prompts/` may be referenced by the runtime manifest.
 
 ## Root runtime/product files
 
 - `config.js` — Frozen 16-field order, exact aliases, bounded waits, guard constants and selector override points preserve scope.
 - `content.js` — Hardened fail-closed runtime revalidates dialog/controls, binds options to the intended popup and blocks submit-capable clicks.
-- `manifest.json` — Firefox MV3 manifest has exact host placeholder, clipboardRead only, ordered top-frame content scripts, Gecko ID and no-data declaration.
+- `manifest.json` — Firefox MV3 manifest has exact host placeholder, clipboardRead only, ordered top-frame content scripts, Gecko ID, strict_min_version and no-data declaration.
+- `package.json` — Project metadata, test/build/preflight npm scripts and pinned dev tooling.
 - `popup.css` — Minimal local styling has no remote resources or functional side effects.
 - `popup.html` — Single-button popup loads packaged scripts only and exposes no unsafe inline runtime code.
 - `popup.js` — User click reads/parses clipboard, queries active tab, sends one message and reports sanitized safe failures.
 - `sample-ticket.json` — Valid schema-1 example uses correct types and keeps environment-specific values safely optional.
 - `shared.js` — Dependency-free parser and validators enforce byte/version/type rules, BOM tolerance, date validity and exact normalization.
+
+## Extension icons
+
+- `icons/icon-16.png` — 16x16 crisp toolbar action icon.
+- `icons/icon-32.png` — 32x32 standard extension icon.
+- `icons/icon-48.png` — 48x48 extensions management icon.
+- `icons/icon-64.png` — 64x64 high-DPI display icon.
+- `icons/icon-96.png` — 96x96 high-DPI display icon.
+- `icons/icon-512.png` — 512x512 master high-resolution store icon.
 
 ## Root project and handoff documents
 
@@ -26,16 +36,20 @@ This optimized package contains **74 files**. The list below is generated from t
 - `FULL_PROJECT_REVIEW_PROMPT.md` — Exhaustive acceptance prompt preserves scope and requires inventory, execution, security, helper mining and final sweep.
 - `IMPLEMENTATION_PROMPT_FOR_WEAK_AI.md` — Literal phased instructions constrain edits, require tests/evidence and prevent scope creep or broad rewrites.
 - `INTERNAL_USE_NOTICE.txt` — Concise intended-use notice is consistent with the internal, tester-reviewed workflow.
-- `MANUAL_ACCEPTANCE_TESTS.md` — M01-M62 give concrete setup/input, expected result and failure interpretation for real-browser behavior.
+- `MANUAL_ACCEPTANCE_TESTS.md` — M01-M63 give concrete setup/input, expected result and failure interpretation for real-browser behavior.
 - `PACKAGE_INDEX.md` — Final index accounts for all runtime, documentation, evidence, test, tool and review files.
 - `PROJECT_PLAN.md` — Phased plan matches the final architecture, safety constraints and real-evidence gates.
 - `README.md` — Usage, supported fields, safety limits, development flow and known limitations match implementation.
 - `RELEASE_CHECKLIST.md` — Release gate requires host configuration, approved DOM evidence, completed manual tests, clean preflight and signing.
 - `REQUIREMENTS_TRACEABILITY.md` — R01-R35 map implementation, automated evidence and real-Jira evidence without treating unit tests as DOM proof.
-- `RUNTIME_FILE_LIST.txt` — Contains exactly the seven root runtime files and excludes every development-only artifact.
+- `RUNTIME_FILE_LIST.txt` — Contains exactly the runtime files and excludes every development-only artifact.
 - `SECURITY_MODEL.md` — Threat model and negative guarantees match static checks and hardened click/DOM handling.
 - `TROUBLESHOOTING.md` — Deterministic field-local debugging order avoids fuzzy matching, broad selectors and unnecessary rewrites.
 - `VERSION.txt` — Package and runtime versions accurately label the handoff as pre-real-Jira validation.
+
+## Release documentation
+
+- `docs/_finish1.md` — 360° bug hunt, release readiness audit, AMO field plans, and notes for reviewers.
 
 ## DOM evidence support
 
@@ -69,7 +83,7 @@ This optimized package contains **74 files**. The list below is generated from t
 ## Automated/manual test support
 
 - `tests/FIXTURE_EXPECTATIONS.md` — Documents each adversarial fixture and its precise expected parser/runtime behavior.
-- `tests/MANUAL_TEST_REPORT_TEMPLATE.md` — Provides one result row for every M01-M62 case plus environment/build/evidence metadata.
+- `tests/MANUAL_TEST_REPORT_TEMPLATE.md` — Provides one result row for every M01-M63 case plus environment/build/evidence metadata.
 - `tests/PHASE_ACCEPTANCE_REPORT_TEMPLATE.md` — Forces weak-AI phase outputs to record changed files, commands, results, evidence and stop decisions.
 - `tests/content-contract.test.cjs` — Static contract tests cover unique dialog/popup logic, rerender reacquisition, text preservation and fail-closed behavior.
 - `tests/package.test.cjs` — Verifies manifest references, exact host/order, runtime list, field order, forbidden fields, fixtures and PNG signatures.
@@ -91,13 +105,15 @@ This optimized package contains **74 files**. The list below is generated from t
 ## Development and release tools
 
 - `tools/README.md` — Documents each development-only tool, safe console use, Windows commands and non-runtime boundary.
-- `tools/build-runtime-package.ps1` — Release-preflight-gated packager includes only the runtime list and makes no signing claim.
+- `tools/build-runtime-package.cjs` — Cross-platform Node packager for runtime-only ZIP and XPI creation.
+- `tools/build-runtime-package.ps1` — Release-preflight-gated PowerShell packager for runtime archive creation.
 - `tools/configure-jira-host.ps1` — Validates one Atlassian host, performs exactly two replacements and writes UTF-8 without BOM.
 - `tools/copy-sample-ticket.ps1` — Simple development helper copies the sample fixture without adding runtime capability.
 - `tools/dialog-guard-probe.js` — Sanitized evidence collector reports candidate dialogs/header tokens/Create controls without ticket values.
 - `tools/dom-probe.js` — Concise structural probe avoids emitting field values and records accessibility/control traits.
 - `tools/dom-report-exporter.js` — Development-only sanitized structural exporter downloads local JSON evidence and is excluded from manifest.
 - `tools/dropdown-probe.js` — Captures control-to-popup relationships, root metadata and option structure for exact association decisions.
+- `tools/generate-icons.cjs` — Deterministic PNG generator creating crisp multi-resolution extension icons.
 - `tools/preflight.cjs` — Dependency-free normal/release gate checks inventory, syntax, JSON, permissions, safety, hashes, tests and evidence markers.
 - `tools/run-preflight.bat` — Windows wrapper delegates to the authoritative Node preflight and forwards arguments/exit code.
 - `tools/update-file-manifest.cjs` — Deterministically regenerates SHA-256 entries for all package files except the manifest itself.
@@ -115,6 +131,11 @@ content.js
 popup.html
 popup.css
 popup.js
+icons/icon-16.png
+icons/icon-32.png
+icons/icon-48.png
+icons/icon-64.png
+icons/icon-96.png
 ```
 
-All other files are documentation, tests, evidence, fixtures, prompts, review records or development/release tools. `tools/preflight.cjs`, the package tests and `tools/build-runtime-package.ps1` enforce this boundary.
+All other files are documentation, tests, evidence, fixtures, prompts, review records or development/release tools. `tools/preflight.cjs`, the package tests and `tools/build-runtime-package.cjs` enforce this boundary.

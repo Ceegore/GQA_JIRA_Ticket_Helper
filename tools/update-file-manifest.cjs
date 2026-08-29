@@ -6,7 +6,7 @@ const path = require("node:path");
 
 const ROOT = path.resolve(__dirname, "..");
 const OUTPUT = path.join(ROOT, "FILE_MANIFEST_SHA256.txt");
-const EXCLUDED_TOP_LEVEL = new Set([".git", "dist"]);
+const EXCLUDED_TOP_LEVEL = new Set([".git", ".gitignore", "dist", ".github", "node_modules"]);
 
 function enumerate(directory, prefix = "") {
   const output = [];

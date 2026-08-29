@@ -76,11 +76,13 @@ Save a completed copy as `tests/MANUAL_TEST_REPORT_COMPLETED.md`. Do not overwri
 | M55 | | | |
 | M56 | | | |
 | M57 | | | |
+| M57A | | | |
 | M58 | | | |
 | M59 | | | |
 | M60 | | | |
 | M61 | | | |
 | M62 | | | |
+| M63 | | | |
 
 ## Field-specific evidence
 

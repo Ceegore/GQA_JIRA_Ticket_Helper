@@ -54,7 +54,7 @@ pasteButton.addEventListener("click", async () => {
   } catch {
     console.error("[GQA JIRA Helper] popup operation failed");
     setStatus(
-      "Cannot reach the Jira helper on this page. Open the PERMAQA Bug creation dialog and try again."
+      "Cannot reach the Jira helper on this page. Open the configured Jira tenant and a PERMAQA Bug creation dialog, then try again."
     );
   } finally {
     pasteButton.disabled = false;

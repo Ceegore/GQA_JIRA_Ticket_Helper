@@ -102,12 +102,15 @@ Repeat applicable rows for every supported select/person field.
 | M55 | Watch Create/Erstellen throughout all tests | Never clicked automatically | **BLOCKER** auto-submit path |
 | M56 | Inspect runtime behavior/source for Enter/keyboard synthesis | None exists | **BLOCKER/HIGH** implicit-submit risk |
 | M57 | Firefox Network panel during paste | No extension-originated external request | **BLOCKER** data-leak capability |
+| M57A | Firefox Network recording before, during, and 10s after paste | No helper-triggered requests containing ticket data before manual submit | **BLOCKER** data-collection reclassification required |
 | M58 | Browser console with sensitive-looking fixture text | Logs contain field keys/generic statuses only, not values/raw errors | data-leak defect |
 | M59 | Source/static test review | No credentials, REST endpoints, storage/cookie/cache APIs | forbidden capability |
 | M60 | Inspect manifest-loaded files | No `tools/`, `tests/`, `dom/`, `reference/`, `review/`, `prompts/` file loaded | packaging defect |
 | M61 | Force dialog loss after some fields | Popup reports filled/skipped counts plus safe stop | insufficient operator feedback |
 | M62 | Inspect configured host in manifest and try another Atlassian tenant | Only exact company tenant has content-script access | host-scope defect |
+| M63 | Start slow paste, close/reopen popup, click Paste again | Second attempt rejected with concurrency message; first finishes safely | concurrency/mutex defect |
 
 ## Release criterion
 
 All applicable tests must PASS, `node tools/preflight.cjs --release` must pass, and the completed report must be reviewed. Any Create/submit, network, credential, storage, wrong-dialog or wrong-person behavior blocks release immediately.
+

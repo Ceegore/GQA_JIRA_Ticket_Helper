@@ -28,9 +28,11 @@ const GQA_FIELD_ORDER = Object.freeze([
 ]);
 
 globalThis.GQA_CONFIG = Object.freeze({
-  PRODUCT_NAME: "GQA JIRA bug reporter helper",
+  PRODUCT_NAME: "GQA Bug Reporter Helper for Jira",
   SCHEMA_VERSION: 1,
   MAX_CLIPBOARD_BYTES: 100000,
+  MAX_MULTI_SELECT_VALUES: 20,
+  DEBUG: false,
   FIELD_ORDER: GQA_FIELD_ORDER,
 
   // Hard safety guard. Optional selectors remain null until real DOM evidence
