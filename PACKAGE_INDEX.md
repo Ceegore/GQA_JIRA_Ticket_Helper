@@ -1,6 +1,6 @@
 # Complete package index
 
-This optimized package contains **84 files**. The list below is generated from the completed recursive audit; every final file is accounted for exactly once. No file under `tools/`, `tests/`, `reference/`, `dom/`, `review/`, `docs/` or `prompts/` may be referenced by the runtime manifest.
+This optimized package contains **85 files**. The list below is generated from the completed recursive audit; every final file is accounted for exactly once. No file under `tools/`, `tests/`, `reference/`, `dom/`, `review/`, `docs/` or `prompts/` may be referenced by the runtime manifest.
 
 ## Root runtime/product files
 
@@ -107,6 +107,7 @@ This optimized package contains **84 files**. The list below is generated from t
 - `tools/README.md` — Documents each development-only tool, safe console use, Windows commands and non-runtime boundary.
 - `tools/build-runtime-package.cjs` — Cross-platform Node packager for runtime-only ZIP and XPI creation.
 - `tools/build-runtime-package.ps1` — Release-preflight-gated PowerShell packager for runtime archive creation.
+- `tools/configure-jira-host.cjs` — Cross-platform Node tool to validate and configure the Jira Cloud hostname in manifest.json.
 - `tools/configure-jira-host.ps1` — Validates one Atlassian host, performs exactly two replacements and writes UTF-8 without BOM.
 - `tools/copy-sample-ticket.ps1` — Simple development helper copies the sample fixture without adding runtime capability.
 - `tools/dialog-guard-probe.js` — Sanitized evidence collector reports candidate dialogs/header tokens/Create controls without ticket values.

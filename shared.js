@@ -8,6 +8,7 @@
 
   function normalizeText(value) {
     return String(value ?? "")
+      .replace(/[\u200B\u200C\u200D\uFEFF\u00AD]/g, "")
       .replace(/\s+/g, " ")
       .trim()
       .toLowerCase();
@@ -27,7 +28,12 @@
     }
 
     const [year, month, day] = value.split("-").map(Number);
-    const date = new Date(Date.UTC(year, month - 1, day));
+    if (year < 1 || month < 1 || month > 12 || day < 1 || day > 31) {
+      return false;
+    }
+
+    const date = new Date(0);
+    date.setUTCFullYear(year, month - 1, day);
     return (
       date.getUTCFullYear() === year &&
       date.getUTCMonth() === month - 1 &&
@@ -54,7 +60,11 @@
   }
 
   function isPlainObject(value) {
-    return value !== null && typeof value === "object" && !Array.isArray(value);
+    if (value === null || typeof value !== "object" || Array.isArray(value)) {
+      return false;
+    }
+    const proto = Object.getPrototypeOf(value);
+    return proto === Object.prototype || proto === null;
   }
 
   function utf8ByteLength(value) {

@@ -61,6 +61,14 @@ node tools/validate-ticket.cjs sample-ticket.json --allowed dom/JIRA_ALLOWED_VAL
 
 A missing or wrong `schema_version` rejects the whole file; invalid individual fields are reported as skip candidates.
 
+### `configure-jira-host.cjs`
+
+Cross-platform Node tool to replace exactly two hostname placeholders, validate the Atlassian hostname, verify JSON before writing and emit clean UTF-8:
+
+```bash
+node tools/configure-jira-host.cjs company.atlassian.net
+```
+
 ### `configure-jira-host.ps1`
 
 Replaces exactly two hostname placeholders, validates the Atlassian hostname, verifies JSON before writing and emits UTF-8 without BOM for Windows PowerShell 5.1 compatibility:
@@ -70,6 +78,14 @@ powershell -ExecutionPolicy Bypass -File .\tools\configure-jira-host.ps1 -HostNa
 ```
 
 Reload the temporary extension and Jira afterwards.
+
+### `generate-icons.cjs`
+
+Generates deterministic, crisp multi-resolution PNG icons in `icons/` (16x16, 32x32, 48x48, 64x64, 96x96, 512x512):
+
+```bash
+node tools/generate-icons.cjs
+```
 
 ### `copy-sample-ticket.ps1`
 
@@ -82,6 +98,14 @@ powershell -ExecutionPolicy Bypass -File .\tools\copy-sample-ticket.ps1
 ### `run-preflight.bat`
 
 Windows Command Prompt wrapper for normal preflight.
+
+### `build-runtime-package.cjs`
+
+Cross-platform Node packager that runs preflight, stages runtime files, and creates runtime-only ZIP and XPI packages under `dist/`:
+
+```bash
+node tools/build-runtime-package.cjs
+```
 
 ### `build-runtime-package.ps1`
 

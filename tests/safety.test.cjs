@@ -101,7 +101,7 @@ test("safeClick explicitly rejects disabled and submit-capable elements", () => 
   assert.match(content, /isDisabled\(clickable\)/);
   assert.match(content, /isSubmitCapableElement\(clickable\)/);
   assert.match(content, /type === "submit" \|\| type === "image"/);
-  assert.match(content, /explicitType === "" && button\.closest\("form"\)/);
+  assert.match(content, /explicitType === "" && \(button\.closest\("form"\) \|\| button\.hasAttribute\("form"\)\)/);
   assert.match(content, /actionTextIsForbidden\(clickable\)/);
 });
 

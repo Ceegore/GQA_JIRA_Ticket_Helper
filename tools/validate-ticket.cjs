@@ -31,6 +31,10 @@ if (allowedPath) {
   allowed = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), allowedPath), "utf8"));
 }
 
+const maxLabels = C.MAX_MULTI_SELECT_VALUES || 20;
+const cleanLabels = S.sanitizeStringArray(t.labels);
+const labelsValid = cleanLabels.length > 0 && cleanLabels.length <= maxLabels;
+
 const checks = [
   ["summary", "string", S.isNonBlankString(t.summary)],
   ["description", "string", S.isNonBlankString(t.description)],
@@ -38,7 +42,7 @@ const checks = [
   ["build_version_spotted", "string", S.isNonBlankString(t.build_version_spotted)],
   ["build_version_released", "string", S.isNonBlankString(t.build_version_released)],
   ["branch", "string", S.isNonBlankString(t.branch)],
-  ["labels", "array", S.sanitizeStringArray(t.labels).length > 0],
+  ["labels", "array", labelsValid],
   ["priority", "string", S.isNonBlankString(t.priority)],
   ["severity", "string", S.isNonBlankString(t.severity)],
   ["game_mode", "string", S.isNonBlankString(t.game_mode)],

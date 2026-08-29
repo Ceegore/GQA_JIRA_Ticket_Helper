@@ -452,7 +452,7 @@
     if (button instanceof HTMLButtonElement) {
       const explicitType = String(button.getAttribute("type") || "").toLowerCase();
       if (explicitType === "submit") return true;
-      if (explicitType === "" && button.closest("form")) return true;
+      if (explicitType === "" && (button.closest("form") || button.hasAttribute("form"))) return true;
     }
 
     return false;
@@ -1076,7 +1076,10 @@
   }
 
   function buildFieldPlan(ticket) {
-    return C.FIELD_ORDER.map((key) => [key, ticket[key]]);
+    return C.FIELD_ORDER.map((key) => [
+      key,
+      Object.prototype.hasOwnProperty.call(ticket, key) ? ticket[key] : undefined
+    ]);
   }
 
   async function pasteTicket(ticket) {

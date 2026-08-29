@@ -8,6 +8,7 @@
     "preflight": "node tools/preflight.cjs",
     "preflight:release": "node tools/preflight.cjs --release",
     "build": "node tools/build-runtime-package.cjs",
+    "configure-host": "node tools/configure-jira-host.cjs",
     "update-manifest": "node tools/update-file-manifest.cjs"
   },
   "devDependencies": {

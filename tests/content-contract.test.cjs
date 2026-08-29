@@ -61,3 +61,12 @@ test("production debug logging is configured from GQA_CONFIG", () => {
   assert.match(content, /const DEBUG = C\.DEBUG \?\? false;/);
 });
 
+test("isSubmitCapableElement rejects buttons with form attribute or form parent", () => {
+  assert.match(content, /button\.closest\("form"\) \|\| button\.hasAttribute\("form"\)/);
+});
+
+test("buildFieldPlan safely ignores prototype pollution properties", () => {
+  assert.match(content, /Object\.prototype\.hasOwnProperty\.call\(ticket,\s*key\)/);
+});
+
+

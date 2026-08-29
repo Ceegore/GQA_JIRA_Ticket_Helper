@@ -36,6 +36,7 @@ const required = [
   "FULL_PROJECT_REVIEW_PROMPT.md", "PACKAGE_INDEX.md", "FILE_MANIFEST_SHA256.txt",
   "tools/dom-probe.js", "tools/dom-report-exporter.js", "tools/dropdown-probe.js",
   "tools/dialog-guard-probe.js", "tools/update-file-manifest.cjs", "tools/validate-ticket.cjs",
+  "tools/build-runtime-package.cjs", "tools/configure-jira-host.cjs", "tools/generate-icons.cjs",
   "tests/shared.test.cjs", "tests/safety.test.cjs", "tests/package.test.cjs",
   "tests/content-contract.test.cjs", "dom/DIALOG_GUARD_EVIDENCE_TEMPLATE.json"
 ];

@@ -13,6 +13,7 @@ test("normalizeText trims, collapses whitespace and ignores case", () => {
   assert.equal(S.normalizeText(null), "");
   assert.equal(S.normalizeText(undefined), "");
   assert.equal(S.normalizeText(123), "123");
+  assert.equal(S.normalizeText("invisible\u200B\u200C\u200D\uFEFF\u00AD spaces"), "invisible spaces");
 });
 
 test("isNonBlankString accepts useful strings only", () => {
@@ -49,6 +50,7 @@ test("isIsoDate accepts real leap dates and rejects impossible dates", () => {
   assert.equal(S.isIsoDate("2024-02-29"), true); // leap year
   assert.equal(S.isIsoDate("2000-02-29"), true); // century leap year
   assert.equal(S.isIsoDate("1900-02-29"), false); // century non-leap year
+  assert.equal(S.isIsoDate("0024-02-29"), true); // early century leap year (setUTCFullYear test)
   assert.equal(S.isIsoDate("2026-09-15"), true);
   assert.equal(S.isIsoDate("2026-02-29"), false);
   assert.equal(S.isIsoDate("2026-04-31"), false);
@@ -83,6 +85,20 @@ test("sanitizeStringArray removes invalid, blank and normalized duplicates", () 
 
   const twentyOneItems = Array.from({ length: 21 }, (_, i) => `label_${i}`);
   assert.equal(S.sanitizeStringArray(twentyOneItems).length, 21);
+});
+
+test("isPlainObject strictly checks plain object prototype", () => {
+  assert.equal(S.isPlainObject({}), true);
+  assert.equal(S.isPlainObject({ a: 1 }), true);
+  assert.equal(S.isPlainObject(Object.create(null)), true);
+  assert.equal(S.isPlainObject([]), false);
+  assert.equal(S.isPlainObject(null), false);
+  assert.equal(S.isPlainObject(undefined), false);
+  assert.equal(S.isPlainObject("string"), false);
+  assert.equal(S.isPlainObject(123), false);
+  assert.equal(S.isPlainObject(new Date()), false);
+  assert.equal(S.isPlainObject(/regex/), false);
+  assert.equal(S.isPlainObject(new Set()), false);
 });
 
 test("utf8ByteLength measures bytes rather than JavaScript characters", () => {

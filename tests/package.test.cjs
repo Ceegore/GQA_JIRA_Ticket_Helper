@@ -105,7 +105,7 @@ test("field order is exact, duplicate-free and identical to configured fields", 
   assert.deepEqual([...C.FIELD_ORDER], EXPECTED_FIELDS);
   assert.equal(new Set(C.FIELD_ORDER).size, C.FIELD_ORDER.length);
   assert.deepEqual(Object.keys(C.FIELDS), EXPECTED_FIELDS);
-  assert.match(read("content.js"), /C\.FIELD_ORDER\.map\(\(key\) => \[key, ticket\[key\]\]\)/);
+  assert.match(read("content.js"), /C\.FIELD_ORDER\.map\(\(key\) => \[/);
 });
 
 test("forbidden project, issue-type and Lead-only fields are absent from runtime plan", () => {
