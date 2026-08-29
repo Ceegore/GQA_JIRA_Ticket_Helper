@@ -1,6 +1,6 @@
 # Complete package index
 
-This optimized package contains **90 files**. The list below is generated from the completed recursive audit; every final file is accounted for exactly once. No file under `tools/`, `tests/`, `reference/`, `dom/`, `review/`, `docs/` or `prompts/` may be referenced by the runtime manifest.
+This optimized package contains **91 files**. The list below is generated from the completed recursive audit; every final file is accounted for exactly once. No file under `tools/`, `tests/`, `reference/`, `dom/`, `review/`, `docs/` or `prompts/` may be referenced by the runtime manifest.
 
 ## Root runtime/product files
 
@@ -69,6 +69,7 @@ This optimized package contains **90 files**. The list below is generated from t
 
 ## Ticket-generation prompts
 
+- `docs/TICKET_JSON_GENERATION_PROMPT.md` — Self-contained, hand-to-another-AI instructions covering the full schema, exact-match semantics, per-field authoring guidance, worked examples verified against the real runtime, and a pre-output self-check; the current authoritative version of this prompt.
 - `prompts/AI_TICKET_GENERATION_PROMPT.md` — Produces schema-1 JSON only, keeps unknown values empty and does not invent Jira options.
 - `prompts/AI_TICKET_GENERATION_PROMPT_WITH_ALLOWED_VALUES_TEMPLATE.md` — Adds an injected exact-value catalog while preserving JSON-only output and no-invention rules.
 
