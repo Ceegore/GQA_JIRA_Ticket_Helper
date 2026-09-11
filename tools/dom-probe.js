@@ -8,12 +8,14 @@
 (() => {
   "use strict";
 
+  // Opacity is deliberately not a filter here: transparent-but-rendered
+  // inputs (react-select search box, Atlaskit checkbox) are real controls.
   const visible = (el) => {
     if (!(el instanceof Element) || !el.isConnected) return false;
     const style = getComputedStyle(el);
     const rect = el.getBoundingClientRect();
     return style.display !== "none" && style.visibility !== "hidden" &&
-      Number(style.opacity) !== 0 && rect.width > 0 && rect.height > 0;
+      rect.width > 0 && rect.height > 0;
   };
 
   const exact = (a, b) => String(a || "").replace(/\s+/g, " ").trim().toLowerCase() ===

@@ -87,6 +87,13 @@ Save a completed copy as `tests/MANUAL_TEST_REPORT_COMPLETED.md`. Do not overwri
 | M65 | | | |
 | M66 | | | |
 | M67 | | | |
+| M68 | | | |
+| M69 | | | |
+| M70 | | | |
+| M71 | | | |
+| M72 | | | |
+| M73 | | | |
+| M74 | | | |
 
 ## Field-specific evidence
 

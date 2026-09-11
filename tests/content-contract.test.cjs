@@ -69,4 +69,30 @@ test("buildFieldPlan safely ignores prototype pollution properties", () => {
   assert.match(content, /Object\.prototype\.hasOwnProperty\.call\(ticket,\s*key\)/);
 });
 
+test("a pointer press is only ever sent to select-like controls and passes the click refusal rules", () => {
+  const presses = content.match(/new MouseEvent\(/g) || [];
+  assert.equal(presses.length, 1);
+  assert.match(content, /function safePress\(element\) \{\s*if \(!element \|\| !isRendered\(element\) \|\| !isSelectLike\(element\)\) return false;\s*if \(isForbiddenClickTarget\(element\)\) return false;/);
+});
 
+test("row activation never clicks a label that owns a control and only uses safeClick", () => {
+  assert.match(content, /if \(labelElement\.closest\("label"\)\?\.control\) return \[\];/);
+  assert.match(content, /for \(const target of activationTargets\(labelElement\)\) \{\s*if \(!safeClick\(target\)\) continue;/);
+});
+
+test("an activated row is committed by blur only and its outcome is verified", () => {
+  assert.match(content, /control\.blur\?\.\(\);\s*\}\s*await sleep\(C\.SETTLE_MS\);\s*return editPersisted\(control, containers, valueTexts, fieldConfig\);/);
+  assert.match(content, /if \(!persisted\) return \{ status: "skipped", reason: "not-confirmed" \};/);
+});
+
+test("discovery only pairs a field with a control of a compatible kind", () => {
+  assert.match(content, /function controlAcceptsField\(control, fieldConfig\)/);
+  assert.match(content, /if \(containsOtherFieldLabel\(node, fieldKey\)\) return null;/);
+  assert.match(content, /return isNearLabel\(controls\[0\], labelElement\) \? controls\[0\] : null;/);
+});
+
+test("the diagnosis report is read-only and reports structure, never values", () => {
+  const diagnosis = content.slice(content.indexOf("function describeControl"), content.indexOf("function handleDiagnose"));
+  assert.doesNotMatch(diagnosis, /safeClick|safePress|\.focus\(|\.click\(|setNativeInputValue|activateRow/);
+  assert.doesNotMatch(diagnosis, /\.value\b|textContent\.slice|innerText\.slice/);
+});

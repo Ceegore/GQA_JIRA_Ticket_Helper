@@ -10,6 +10,10 @@ Screenshots establish visible intent but cannot prove selectors, roles, IDs, opt
 4. Open a blank PERMAQA / Bug create dialog in a non-destructive test context.
 5. Do not enter confidential ticket text before collecting structural reports.
 
+## 1a. Start with the popup's own diagnosis
+
+Click **Diagnose page** in the extension popup while the create dialog is open. It runs the engine's real discovery in read-only mode and shows, per configured field, the label it recognised, the control it paired with it (tag, type, role, id, name, aria-label, placeholder, data-testid, disabled/read-only) and the dialog-guard evidence for every visible dialog. A field with a label but no control is a collapsed issue-view style row: Paste ticket opens it with one click, fills the mounted control and commits it by blur. Copy the report text into the defect; it contains no field values.
+
 ## 2. Prove the dialog guard first
 
 Run `tools/dialog-guard-probe.js` and save the local report under `dom/actual/` in an approved internal workspace. Populate `dom/DIALOG_GUARD_EVIDENCE_TEMPLATE.json` with:

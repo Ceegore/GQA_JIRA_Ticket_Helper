@@ -202,3 +202,153 @@ test("status text is written as text, never as markup", async () => {
   assert.equal(popup.status.children.length, 0);
   assert.equal(popup.status.textContent, "<img src=x onerror=alert(1)>");
 });
+
+// ---------------------------------------------------------------------------
+// Per-field outcome and page diagnosis
+// ---------------------------------------------------------------------------
+
+test("fields that had a value but were not applied are listed with a plain reason", async () => {
+  const popup = createPopup({
+    clipboard: async () => VALID_TICKET,
+    respond: async () => ({
+      ok: true,
+      filled: 1,
+      partial: 1,
+      skipped: 14,
+      stopped: null,
+      fields: [
+        { key: "summary", status: "filled" },
+        { key: "description", status: "skipped", reason: "empty" },
+        { key: "tester", status: "skipped", reason: "control-not-found" },
+        { key: "severity", status: "skipped", reason: "control-not-mounted" },
+        { key: "labels", status: "partial", reason: "partial-values", selected: 1, requested: 3 },
+        { key: "flagged_impediment", status: "skipped", reason: "not-true" },
+        { key: "origin", status: "skipped", reason: "some-new-reason" }
+      ]
+    })
+  });
+
+  const status = await popup.clickPaste();
+
+  assert.equal(
+    status,
+    [
+      "Done: 1 filled, 1 partly filled, 14 skipped.",
+      "Not applied:",
+      "tester: field not found on this form",
+      "severity: row found but its input did not open",
+      "labels: 1 of 3 values applied",
+      "origin: some-new-reason"
+    ].join("\n")
+  );
+});
+
+test("a run without problems keeps the one-line summary", async () => {
+  const popup = createPopup({
+    clipboard: async () => VALID_TICKET,
+    respond: async () => ({
+      ok: true,
+      filled: 1,
+      partial: 0,
+      skipped: 15,
+      stopped: null,
+      fields: [
+        { key: "summary", status: "filled" },
+        { key: "description", status: "skipped", reason: "empty" }
+      ]
+    })
+  });
+
+  assert.equal(await popup.clickPaste(), "Done: 1 filled, 15 skipped.");
+});
+
+test("the status line never carries ticket values, only field keys and reasons", async () => {
+  const secret = "SECRET-SUMMARY-TEXT";
+  const popup = createPopup({
+    clipboard: async () => JSON.stringify({ schema_version: 1, summary: secret }),
+    respond: async () => ({
+      ok: true,
+      filled: 0,
+      partial: 0,
+      skipped: 16,
+      stopped: null,
+      fields: [{ key: "summary", status: "skipped", reason: "not-confirmed", value: secret }]
+    })
+  });
+
+  const status = await popup.clickPaste();
+
+  assert.match(status, /summary: value was not kept after editing/);
+  assert.doesNotMatch(status, new RegExp(secret));
+});
+
+async function clickDiagnose(popup) {
+  const button = popup.window.document.getElementById("diagnoseButton");
+  button.click();
+  for (let attempt = 0; attempt < 200 && button.disabled; attempt += 1) {
+    await new Promise((resolve) => popup.window.setTimeout(resolve, 1));
+  }
+  return popup.status.textContent;
+}
+
+test("diagnosis asks the page for a structural report without touching the clipboard", async () => {
+  let clipboardReads = 0;
+  const report = {
+    ok: true,
+    page: "/jira/software/projects/PERMAQA/boards/1",
+    dialogs: [{ tag: "div", role: "dialog", project: true, issueType: true, createButton: true }],
+    dialogFound: true,
+    fields: [{ key: "summary", via: null, control: null, label: { tag: "h1", text: "zusammenfassung" }, labelCount: 1 }]
+  };
+  const popup = createPopup({
+    clipboard: async () => {
+      clipboardReads += 1;
+      return VALID_TICKET;
+    },
+    respond: async (message) => (message.type === "GQA_DIAGNOSE" ? report : { ok: false })
+  });
+
+  const status = await clickDiagnose(popup);
+
+  assert.equal(clipboardReads, 0);
+  assert.equal(popup.sentMessages.length, 1);
+  assert.deepEqual(JSON.parse(JSON.stringify(popup.sentMessages[0].message)), { type: "GQA_DIAGNOSE" });
+  assert.match(status, /Diagnosis ready/);
+  const reportBox = popup.window.document.getElementById("report");
+  assert.equal(reportBox.hidden, false);
+  assert.deepEqual(JSON.parse(reportBox.value), report);
+});
+
+test("diagnosis explains a failed dialog guard and an unreachable page", async () => {
+  const noDialog = createPopup({
+    respond: async () => ({ ok: true, page: "/", dialogs: [], dialogFound: false, fields: [] })
+  });
+  assert.match(await clickDiagnose(noDialog), /No unique PERMAQA Bug dialog/);
+  assert.equal(noDialog.window.document.getElementById("report").hidden, false);
+
+  const unreachable = createPopup({
+    respond: async () => {
+      throw new Error("Could not establish connection.");
+    }
+  });
+  assert.match(await clickDiagnose(unreachable), /Cannot reach the Jira helper/);
+  assert.equal(unreachable.window.document.getElementById("report").hidden, true);
+});
+
+test("a paste clears a previous diagnosis report and both buttons are re-enabled", async () => {
+  const popup = createPopup({
+    clipboard: async () => VALID_TICKET,
+    respond: async (message) =>
+      message.type === "GQA_DIAGNOSE"
+        ? { ok: true, page: "/", dialogs: [], dialogFound: true, fields: [] }
+        : { ok: true, filled: 1, partial: 0, skipped: 15, stopped: null }
+  });
+
+  await clickDiagnose(popup);
+  assert.equal(popup.window.document.getElementById("report").hidden, false);
+
+  await popup.clickPaste();
+  assert.equal(popup.window.document.getElementById("report").hidden, true);
+  assert.equal(popup.button.disabled, false);
+  assert.equal(popup.window.document.getElementById("diagnoseButton").disabled, false);
+});

@@ -24,7 +24,7 @@ The independent reviewer must verify every row against code, automated evidence 
 | R18 | Never auto-submit | `safeClick`, no submit/keyboard APIs | safety/preflight | M55/M56 |
 | R19 | No project/issue-type switching | absent from field plan | package tests | M10/M48/M49 |
 | R20 | Lead-only and unsupported fields untouched | absent from plan | package tests | M01 visual review |
-| R21 | Concise one-button popup | popup files | code/package review | visual/manual |
+| R21 | Concise popup: Paste ticket plus read-only Diagnose page | popup files | popup-behavior tests | visual/manual, M73/M74 |
 | R22 | Logs omit ticket values/raw errors | popup/content logging | safety tests | M58 |
 | R23 | No frameworks/runtime dependencies | repository/runtime list | inventory/preflight | N/A |
 | R24 | DOM selectors evidence-based | config + `dom/` workflow | inventory/review | dialog/field reports |
@@ -39,3 +39,6 @@ The independent reviewer must verify every row against code, automated evidence 
 | R33 | Firefox no-data-collection declaration present | manifest | safety/preflight | install/review |
 | R34 | Development tools never enter runtime package | manifest/runtime list/build tool | package/preflight | M60/archive inspection |
 | R35 | Release requires hostname + real DOM + completed manual report | preflight release mode | preflight | release records |
+| R36 | Collapsed issue-view style rows are activated by one safe click, committed by blur and verified | row activation in `content.js` | jira-layouts tests | M68-M72 |
+| R37 | A control is paired with a field only when its kind is compatible and it belongs to that field's row | `controlAcceptsField`, label climb guards | jira-layouts/content-contract tests | M01 visual review |
+| R38 | Every field reports its outcome and reason without exposing values | paste result `fields`, popup formatting | popup-behavior/jira-layouts tests | M58 |

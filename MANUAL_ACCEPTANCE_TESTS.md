@@ -114,6 +114,20 @@ Repeat applicable rows for every supported select/person field.
 | M66 | Paste two labels where only one exists in Jira | Popup reports the field as partly filled, not filled | dishonest success reporting |
 | M67 | Deny or empty the clipboard, then click Paste | Popup names a clipboard problem, not an unreachable-page problem | misleading operator feedback |
 
+## I. Issue-view style dialog and diagnosis
+
+Applicable when the create dialog shows rows as icon + field name (collapsed) with "Zusammenfassung" as a heading placeholder.
+
+| ID | Exact setup/input | Expected result | A failure indicates |
+|---|---|---|---|
+| M68 | Blank collapsed Summary heading; `summary-only.json` | Summary row opens, receives the text and shows it after the helper finishes; nothing else changes | inline-edit activation/commit defect |
+| M69 | Collapsed Description placeholder sentence; multiline description | Editor opens, text lands as plain paragraphs, no markup | editor activation defect |
+| M70 | Collapsed select row (e.g. Severity) with an exact existing option | Row opens, option chosen, row collapses showing the value | select activation defect |
+| M71 | Collapsed select row with a near match only | Row left unchanged; popup lists the field under "Not applied" | forbidden fuzzy match |
+| M72 | Row that discards its edit on blur, if any exists | Popup reports "value was not kept after editing"; nothing else changes | dishonest success reporting |
+| M73 | Click **Diagnose page** with the dialog open | Report lists every configured field with label/control structure; no field value appears; no row opens; Create never clicked | diagnosis side effect or value leak |
+| M74 | Click **Diagnose page** on a Story dialog | Report says no unique PERMAQA Bug dialog and shows which guard check failed | guard feedback defect |
+
 ## Release criterion
 
 All applicable tests must PASS, `node tools/preflight.cjs --release` must pass, and the completed report must be reviewed. Any Create/submit, network, credential, storage, wrong-dialog or wrong-person behavior blocks release immediately.

@@ -1,17 +1,17 @@
 # Complete package index
 
-This optimized package contains **91 files**. The list below is generated from the completed recursive audit; every final file is accounted for exactly once. No file under `tools/`, `tests/`, `reference/`, `dom/`, `review/`, `docs/` or `prompts/` may be referenced by the runtime manifest.
+This optimized package contains **92 files**. The list below is generated from the completed recursive audit; every final file is accounted for exactly once. No file under `tools/`, `tests/`, `reference/`, `dom/`, `review/`, `docs/` or `prompts/` may be referenced by the runtime manifest.
 
 ## Root runtime/product files
 
 - `config.js` — Frozen 16-field order, exact aliases, bounded waits, guard constants and selector override points preserve scope.
-- `content.js` — Hardened fail-closed runtime revalidates dialog/controls, binds options to the intended popup and blocks submit-capable clicks.
+- `content.js` — Hardened fail-closed runtime revalidates dialog/controls, activates collapsed issue-view style rows with one safe click, binds options to the intended popup, blocks submit-capable clicks and answers read-only diagnosis requests.
 - `manifest.json` — Firefox MV3 manifest has exact host placeholder, clipboardRead only, ordered top-frame content scripts, Gecko ID, strict_min_version and no-data declaration.
 - `package.json` — Project metadata, test/build/preflight npm scripts and pinned dev tooling.
 - `package-lock.json` — Pins the exact dev-tool versions, including the Mozilla add-on linter used by the release gate.
 - `popup.css` — Minimal local styling has no remote resources or functional side effects.
-- `popup.html` — Single-button popup loads packaged scripts only and exposes no unsafe inline runtime code.
-- `popup.js` — User click reads/parses clipboard, queries active tab, sends one message and reports sanitized safe failures.
+- `popup.html` — Two-button popup (Paste ticket, Diagnose page) loads packaged scripts only and exposes no unsafe inline runtime code.
+- `popup.js` — User click reads/parses clipboard, queries active tab, sends one message and reports sanitized safe failures plus per-field reasons; Diagnose page shows the engine's read-only structural report.
 - `sample-ticket.json` — Valid schema-1 example uses correct types and keeps environment-specific values safely optional.
 - `shared.js` — Dependency-free parser and validators enforce byte/version/type rules, BOM tolerance, date validity and exact normalization.
 
@@ -90,9 +90,10 @@ This optimized package contains **91 files**. The list below is generated from t
 - `tests/content-contract.test.cjs` — Static contract tests cover unique dialog/popup logic, rerender reacquisition, text preservation and fail-closed behavior.
 - `tests/dom-behavior.test.cjs` — Executable jsdom tests drive the real content script through guard refusals, dropdown matching, multi-value labels and lifecycle stops.
 - `tests/helpers/dom-harness.cjs` — Loads the real runtime files into a laid-out jsdom document and reproduces the popup's structured-clone message boundary.
+- `tests/jira-layouts.test.cjs` — Executable jsdom tests for the issue-view style dialog (collapsed rows, heading placeholder, commit by blur), react-select mousedown/opacity behaviour, the collapsed editor, transparent checkboxes, per-field reporting and the read-only diagnosis message.
 - `tests/helpers/popup-harness.cjs` — Loads the real popup document and scripts with mocked clipboard and messaging so popup outcomes are observable.
 - `tests/package.test.cjs` — Verifies manifest references, exact host/order, runtime list, field order, forbidden fields, fixtures and PNG signatures.
-- `tests/popup-behavior.test.cjs` — Executable popup tests separate clipboard failures from unreachable-content-script failures and check partial reporting and text-only status.
+- `tests/popup-behavior.test.cjs` — Executable popup tests separate clipboard failures from unreachable-content-script failures and check partial reporting, per-field reasons, the diagnosis flow and text-only status.
 - `tests/safety.test.cjs` — Scans runtime for network/storage/credentials/unsafe sinks/submit paths, permission drift and logging leakage.
 - `tests/shared.test.cjs` — Unit coverage includes schema, BOM, unknown keys, byte boundaries, dates, numbers, duplicates and exact matching.
 

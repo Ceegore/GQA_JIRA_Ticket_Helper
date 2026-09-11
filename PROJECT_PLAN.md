@@ -55,11 +55,11 @@ MV3, `clipboardRead` only, one exact Atlassian host in both host permission and 
 
 ### `popup.js`
 
-User click -> clipboard read -> strict parser -> active tab query -> message -> concise counts/safe-stop status. Catch blocks log no payload/raw error object.
+Paste ticket: user click -> clipboard read -> strict parser -> active tab query -> message -> concise counts, per-field reasons and safe-stop status. Diagnose page: user click -> active tab query -> read-only structural report shown for copying. Catch blocks log no payload/raw error object.
 
 ### `content.js`
 
-Message -> payload/version check -> unique dialog guard -> deterministic sequential plan. For each field: reacquire dialog, validate value, find one unambiguous control, apply bounded adapter, record filled/skipped, continue. Dialog loss stops remaining fields safely.
+Message -> payload/version check -> unique dialog guard -> deterministic sequential plan. For each field: reacquire dialog, validate value, find one unambiguous, kind-compatible control (or activate a collapsed issue-view style row with one safe click and adopt the control it mounts), apply bounded adapter, commit an activated row by blur and verify it, record filled/partial/skipped with a reason, continue. Dialog loss stops remaining fields safely.
 
 ### `config.js`
 

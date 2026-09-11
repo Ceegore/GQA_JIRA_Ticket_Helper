@@ -76,11 +76,13 @@ All direct runtime UI clicks pass through `safeClick()`. It refuses:
 - form buttons with missing type or `type=submit`,
 - any target whose visible/accessibility/title/value text exactly matches a forbidden submit/save action.
 
-Static tests enforce one direct `.click()` location and reject form methods, submit events and keyboard synthesis. Any newly discovered path capable of creating an issue automatically is a release blocker.
+Select-like controls additionally receive a synthetic mousedown/mouseup pair through `safePress()`, because react-select opens its menu on mousedown; it applies the same refusal rules and is the only pointer event the runtime synthesizes. Collapsed issue-view style rows are opened with `safeClick()` on the row's name, its shown value or its compact row, never on a `<label>` that owns a control, and an activated row is committed by blurring its control: no key is pressed and no confirm button is clicked.
+
+Static tests enforce one direct `.click()` location, one `MouseEvent` construction site and reject form methods, submit events and keyboard synthesis. Any newly discovered path capable of creating an issue automatically is a release blocker.
 
 ## Data leakage threat
 
-Runtime logs contain field keys and generic statuses only. Popup/runtime catch blocks do not pass clipboard payloads or raw error objects to the console. Development reports can contain internal field or option names; collect them on a blank form where possible and keep them in approved company systems.
+Runtime logs contain field keys and generic statuses only. The paste result and the popup status name field keys and reason codes, never values. The read-only page diagnosis reports labels, control attributes and guard evidence and does not read field values. Popup/runtime catch blocks do not pass clipboard payloads or raw error objects to the console. Development reports can contain internal field or option names; collect them on a blank form where possible and keep them in approved company systems.
 
 ## Development-tool caveat
 

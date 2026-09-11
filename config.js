@@ -62,8 +62,31 @@ globalThis.GQA_CONFIG = Object.freeze({
   // Keep waits bounded. Failure means "skip field", not "retry forever".
   WAIT_STEP_MS: 50,
   WAIT_TIMEOUT_MS: 2000,
-  OPTION_WAIT_TIMEOUT_MS: 2000,
+  // Pickers that search on the server (people, labels, versions) answer well
+  // after a click-open; typing then waits for the filtered list.
+  OPTION_WAIT_TIMEOUT_MS: 3000,
+  // Issue-view style rows mount their control after a click; the description
+  // editor is loaded on demand and is the slowest of them.
+  ACTIVATION_WAIT_MS: 3000,
+  // Time given to React to commit an edit after the control is blurred.
+  SETTLE_MS: 150,
   BETWEEN_FIELDS_MS: 80,
+
+  // Words that may follow (or precede) a field name in a placeholder
+  // sentence, such as "Beschreibung hinzufügen ..." or "Add a description".
+  // A label is accepted through a placeholder only with one of these verbs,
+  // never through arbitrary prefix matching.
+  PLACEHOLDER_VERBS: [
+    "hinzufügen",
+    "eingeben",
+    "auswählen",
+    "wählen",
+    "add",
+    "enter",
+    "select",
+    "choose",
+    "type"
+  ],
 
   // Optional exact selectors discovered with tools/dom-report-exporter.js.
   // Leave null until a stable selector is known. The generic engine will try

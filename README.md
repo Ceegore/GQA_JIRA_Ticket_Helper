@@ -30,7 +30,8 @@ This replaces both `https://YOUR-COMPANY.atlassian.net/*` entries and writes UTF
 4. Open the PERMAQA Bug create dialog.
 5. Copy `sample-ticket.json` to the clipboard.
 6. Click the extension icon -> **Paste ticket**.
-7. Review every field. The extension never clicks Create/Erstellen.
+7. Review every field. The extension never clicks Create/Erstellen. Fields that had a value but were not applied are listed under the result with a reason.
+8. If a field is not applied, click **Diagnose page** in the popup: it shows, per configured field, which label and control the engine sees on the open dialog without changing anything. Copy that text into the bug report.
 
 ## 3. Automated checks
 
@@ -42,10 +43,11 @@ npm test
 node tools/preflight.cjs
 ```
 
-The suite contains 101 tests. The runtime itself stays dependency-free; the pinned dev dependencies exist only for the test harness and Mozilla's add-on linter.
+The suite contains 149 tests. The runtime itself stays dependency-free; the pinned dev dependencies exist only for the test harness and Mozilla's add-on linter.
 
 - **Unit and static tests** cover parsing, UTF-8 byte limits, schema strictness, exact matching, permission/safety drift, deterministic field scope and package structure.
 - **Executable behaviour tests** load `config.js`, `shared.js`, `content.js` and the real popup into a jsdom document and drive them through the exact message the popup sends. They prove the dialog guard refuses wrong dialogs, that Create/Erstellen is never clicked, that dropdown matching stays exact, and that multi-value fields are either complete or reported as partly filled.
+- **Jira layout tests** (`tests/jira-layouts.test.cjs`) cover the two ways Jira renders the create form: classic label+input rows, and the issue-view style dialog whose rows are collapsed to their name and only mount a control after a click. They also cover react-select pickers that open on mousedown and hide their search input, the collapsed description editor, transparent Atlaskit checkboxes and the read-only diagnosis message.
 
 Preflight additionally runs Mozilla's `web-ext lint` against a runtime-only staging copy. Normal preflight is expected to warn while hostname, real DOM evidence and the completed manual report are still pending.
 

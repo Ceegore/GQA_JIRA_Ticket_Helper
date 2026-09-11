@@ -9,11 +9,14 @@
   "use strict";
 
   const normalize = (value) => String(value || "").replace(/\s+/g, " ").trim();
+  // Opacity is reported, not filtered: react-select keeps its search input at
+  // opacity 0 while a value is shown and Atlaskit checkboxes are transparent
+  // inputs over a drawn box. The extension treats both as real controls.
   const visible = (el) => {
     if (!(el instanceof Element)) return false;
     const style = getComputedStyle(el);
     const rect = el.getBoundingClientRect();
-    return style.display !== "none" && style.visibility !== "hidden" && Number(style.opacity) !== 0 && rect.width > 0 && rect.height > 0;
+    return style.display !== "none" && style.visibility !== "hidden" && rect.width > 0 && rect.height > 0;
   };
 
   const dialogs = [...document.querySelectorAll('[role="dialog"], [aria-modal="true"]')].filter(visible);
@@ -28,7 +31,7 @@
     "input",
     "textarea",
     "select",
-    '[contenteditable="true"]',
+    '[contenteditable]:not([contenteditable="false"])',
     '[role="textbox"]',
     '[role="combobox"]',
     '[role="checkbox"]',
@@ -73,7 +76,28 @@
       ariaExpanded: safeAttr(el, "aria-expanded"),
       ariaChecked: safeAttr(el, "aria-checked"),
       contentEditable: safeAttr(el, "contenteditable"),
-      disabled: Boolean(el.disabled) || safeAttr(el, "aria-disabled") === "true"
+      opacity: getComputedStyle(el).opacity,
+      disabled: Boolean(el.disabled) || safeAttr(el, "aria-disabled") === "true",
+      readOnly: Boolean(el.readOnly) || safeAttr(el, "aria-readonly") === "true"
+    }));
+
+  // Collapsed issue-view style rows have no control until clicked; their name
+  // is all the extension can see, so list every compact text element too.
+  const rowNames = [...dialog.querySelectorAll("h1,h2,h3,h4,h5,h6,label,legend,button,span,p,div")]
+    .filter(visible)
+    .filter((el) => {
+      const rect = el.getBoundingClientRect();
+      return rect.height <= 80 && rect.width <= 800 && el.children.length === 0;
+    })
+    .map((el, index) => ({
+      index,
+      tag: el.tagName,
+      text: normalize(el.innerText || el.textContent).slice(0, 80),
+      dataTestId: safeAttr(el, "data-testid"),
+      role: safeAttr(el, "role"),
+      parentTag: el.parentElement?.tagName || "",
+      parentDataTestId: el.parentElement ? safeAttr(el.parentElement, "data-testid") : "",
+      parentRole: el.parentElement ? safeAttr(el.parentElement, "role") : ""
     }));
 
   const buttons = [...dialog.querySelectorAll("button")]
@@ -100,7 +124,8 @@
       dataTestId: safeAttr(dialog, "data-testid")
     },
     controls,
-    buttons
+    buttons,
+    rowNames
   };
 
   globalThis.__GQA_DOM_REPORT = report;

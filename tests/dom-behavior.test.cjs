@@ -191,21 +191,42 @@ test("refuses a dialog without a Create/Erstellen button", async () => {
   assert.deepEqual(result, { ok: false, error: REFUSED });
 });
 
-test("nested dialogs are ambiguous and refused", async () => {
+test("of nested passing dialogs only the innermost is used, and only its own fields", async () => {
+  // Modal libraries wrap the role=dialog element in an aria-modal container;
+  // both pass the contract with the same content. The innermost wins so one
+  // modal is never mistaken for two, while a field that exists only in the
+  // outer wrapper stays out of reach.
   const h = createHarness(`
     <div role="dialog" data-rect='{"top":0,"height":600,"width":700}'>
       <div class="hdr" data-rect='{"top":4,"height":24,"width":300}'>
         <span data-rect='{"top":4,"height":20,"width":120}'>PERMAQA</span>
         <span data-rect='{"top":4,"height":20,"width":120}'>Bug</span>
       </div>
+      ${inputRow("Branch", { id: "outer-branch" })}
       ${dialog(inputRow("Zusammenfassung", { id: "inner" }))}
       <button type="button" data-rect='{"top":400,"height":32,"width":120}'>Erstellen</button>
+    </div>`);
+
+  const result = await h.paste({ schema_version: 1, summary: "lands inside", branch: "main" });
+
+  assert.equal(result.ok, true);
+  assert.equal(result.filled, 1);
+  assert.equal(h.query("#inner").value, "lands inside");
+  assert.equal(h.query("#outer-branch").value, "");
+});
+
+test("two separate passing dialogs stay ambiguous even when one is inside another's ancestor", async () => {
+  const h = createHarness(`
+    <div data-rect='{"top":0,"height":1200,"width":700}'>
+      ${dialog(inputRow("Zusammenfassung", { id: "s1" }))}
+      ${dialog(inputRow("Zusammenfassung", { id: "s2" }))}
     </div>`);
 
   const result = await h.paste({ schema_version: 1, summary: "must not land" });
 
   assert.deepEqual(result, { ok: false, error: REFUSED });
-  assert.equal(h.query("#inner").value, "");
+  assert.equal(h.query("#s1").value, "");
+  assert.equal(h.query("#s2").value, "");
 });
 
 test("a hidden dialog is not a usable dialog", async () => {

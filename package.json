@@ -1,10 +1,10 @@
 {
   "name": "gqa-jira-bug-reporter-helper",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "private": true,
   "description": "Internal QA helper that fills supported fields in an open Jira Bug form from user-copied JSON and never submits the issue automatically.",
   "scripts": {
-    "test": "node --test tests/content-contract.test.cjs tests/dom-behavior.test.cjs tests/package.test.cjs tests/popup-behavior.test.cjs tests/safety.test.cjs tests/shared.test.cjs",
+    "test": "node --test tests/content-contract.test.cjs tests/dom-behavior.test.cjs tests/jira-layouts.test.cjs tests/package.test.cjs tests/popup-behavior.test.cjs tests/safety.test.cjs tests/shared.test.cjs",
     "preflight": "node tools/preflight.cjs",
     "preflight:release": "node tools/preflight.cjs --release",
     "build": "node tools/build-runtime-package.cjs",

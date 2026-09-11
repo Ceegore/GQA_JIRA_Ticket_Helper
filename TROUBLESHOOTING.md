@@ -34,15 +34,26 @@ Do not respond to one failure by rewriting the generic engine. Work in this orde
 5. Complete `dom/DIALOG_GUARD_EVIDENCE_TEMPLATE.json`.
 6. Add stable guard selectors only from real evidence; never weaken to whole-dialog substring matching.
 
+## Popup lists a field under "Not applied"
+
+The line names the field key and the reason. The reasons mean:
+
+- `field not found on this form`: no label, placeholder or control matched the configured aliases; see the next section.
+- `row found but its input did not open`: the collapsed row was recognised and clicked, but no compatible control appeared within the bounded wait. Click **Diagnose page** and check which element carries the row name; the row may need a different click target or an evidence-backed selector.
+- `value was not kept after editing`: the control was filled, but after blur neither the control nor the row shows the value. Jira discarded the edit; capture how that row commits (Enter, confirm button, blur) as evidence before changing anything.
+- `value could not be applied`: no unique exact option, a refused click target or a control the adapter cannot drive.
+- `only some values applied` / `N of M values applied`: see the partly filled section.
+
 ## Field is skipped as control-not-found
 
 1. Confirm JSON value is actionable.
-2. Run `tools/dom-report-exporter.js` on a blank form.
-3. Locate the actual control and actual editable descendant.
-4. Prefer stable ID/ARIA/data-testid evidence.
-5. Add one field selector to `config.js`.
-6. Retry that field only, then rerun all tests.
-7. If multiple controls map to one label, do not pick the first; configure evidence.
+2. Click **Diagnose page** in the popup; it shows which label and control the engine sees for every field.
+3. Run `tools/dom-report-exporter.js` on a blank form.
+4. Locate the actual control and actual editable descendant.
+5. Prefer stable ID/ARIA/data-testid evidence.
+6. Add one field selector to `config.js`.
+7. Retry that field only, then rerun all tests.
+8. If multiple controls map to one label, do not pick the first; configure evidence.
 
 ## Text field is found but value does not stick
 
@@ -55,6 +66,7 @@ Do not respond to one failure by rewriting the generic engine. Work in this orde
 ## Dropdown is not selected
 
 1. Confirm desired value is exact after case/whitespace normalization.
+1a. react-select pickers open on the control's mousedown, not on a click; the helper sends a pointer press first, then a click, then types into searchable inputs. If the menu still does not open, record which element owns the mousedown handler.
 2. Manually open only that dropdown and run `tools/dropdown-probe.js`.
 3. Check `aria-controls`/`aria-owns` and popup root.
 4. Check duplicate exact labels, secondary person text, disabled options and create-new entries.

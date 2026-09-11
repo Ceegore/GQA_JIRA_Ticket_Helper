@@ -4,7 +4,7 @@ This package is the complete implementation, evidence and review handoff for the
 
 ## Product in one sentence
 
-Copy schema-versioned ticket JSON -> open the **PERMAQA / Bug** Jira create dialog -> click **Paste ticket** -> the extension fills supported fields best-effort -> a human reviews and manually clicks Jira **Create/Erstellen**.
+Copy schema-versioned ticket JSON -> open the **PERMAQA / Bug** Jira create dialog -> click **Paste ticket** -> the extension fills supported fields best-effort and names any field it could not apply -> a human reviews and manually clicks Jira **Create/Erstellen**. **Diagnose page** in the same popup shows what the engine sees on the dialog without changing it.
 
 ## Current verdict
 
@@ -38,7 +38,7 @@ The reusable instructions are in `FULL_PROJECT_REVIEW_PROMPT.md`; the completed 
 1. Configure the exact Jira hostname with `tools/configure-jira-host.ps1`.
 2. Load the temporary extension in `about:debugging`, then reload Jira.
 3. Open a blank real PERMAQA Bug create dialog.
-4. Run the dialog, field and dropdown evidence tools described in `DOM_EVIDENCE_WORKFLOW.md`.
+4. Click **Diagnose page** in the popup first; then run the dialog, field and dropdown evidence tools described in `DOM_EVIDENCE_WORKFLOW.md` for anything the diagnosis leaves open.
 5. Keep generated reports in approved internal systems; person/option names may be sensitive.
 6. Execute `MANUAL_ACCEPTANCE_TESTS.md` and save a completed copy as `tests/MANUAL_TEST_REPORT_COMPLETED.md`.
 7. Never treat test execution as permission for the extension to click Create.

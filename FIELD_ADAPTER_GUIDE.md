@@ -14,7 +14,13 @@ Stop. Run `tools/dialog-guard-probe.js`. Do not weaken the guard to whole-dialog
 
 ### 3. Control not found or multiple candidates found?
 
-Run `tools/dom-report-exporter.js`. Add one stable, evidence-backed `selector` in `config.js` for that field before touching generic discovery. Ambiguity must skip, not select the first nearby control.
+Click **Diagnose page** in the popup, then run `tools/dom-report-exporter.js`. Add one stable, evidence-backed `selector` in `config.js` for that field before touching generic discovery. Ambiguity must skip, not select the first nearby control.
+
+Discovery pairs a field only with a control of a compatible kind (a text field never takes a checkbox or a dropdown's search box), stops climbing at an ancestor that holds another field's label and requires the control to sit on or below its label.
+
+### 3a. Row recognised but no control mounted (issue-view style dialog)?
+
+Jira's issue-view style create dialog collapses each row to an icon plus the field name (or a placeholder sentence such as "Beschreibung hinzufügen ..."); the control exists only after the row is clicked. The engine activates such a row with `safeClick` on the name, the shown value or the compact row, adopts only a compatible control that did not exist before the click (preferring the one Jira focused), fills it, commits by blurring it and verifies that the control or the collapsed row shows the value. A row that discards the edit is reported as not confirmed. No key is ever pressed and no confirm button is clicked; a row that needs one is evidence for a field-specific decision, not for weakening the click gate.
 
 ### 4. Normal input/textarea?
 
@@ -32,12 +38,12 @@ Require exactly one enabled exact option, assign its value and dispatch input/ch
 
 ### 7. Combobox/listbox?
 
-- open only the intended control through `safeClick`,
+- open only the intended control through a pointer press plus `safeClick` (react-select opens on mousedown; both pass the same refusal rules),
 - prefer option roots linked by `aria-controls` or `aria-owns`,
 - otherwise accept only one uniquely newly visible popup root created by that click,
 - never search unrelated global option lists,
 - first try one unique exact match without typing,
-- if the control is a searchable input, preserve its prior query, type the desired exact value and continue within the same popup session,
+- if the control is a searchable input, preserve its prior query, type the desired exact value and wait, within the bounded timeout, for the filtered list to contain one exact option,
 - restore the prior query when no unique exact option exists,
 - skip disabled, duplicate, near-match and create-new options.
 
